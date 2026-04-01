@@ -10,7 +10,7 @@ const projects: Project[] = [
   {
     title: "Chanmin Website",
     description: "Personal portfolio site built with Next.js and Tailwind CSS.",
-    image: "/projects/chanmin-website.png",
+    image: "/projects/placeholder.svg",
     githubUrl: "https://github.com/davidchanminpark/chanmin",
     linkedinUrl: "",
   },
