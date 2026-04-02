@@ -5,8 +5,8 @@ import { getLiveVlogStats, getLiveVlogItems } from "@/lib/youtube";
 
 export default async function VlogsPage() {
   const [stats, items] = await Promise.all([
-    getLiveVlogStats(vlogs.stats),
-    getLiveVlogItems(vlogs.items),
+    getLiveVlogStats(vlogs.channels, vlogs.stats),
+    getLiveVlogItems(vlogs.channels, vlogs.fallbackItems),
   ]);
 
   return (

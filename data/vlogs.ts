@@ -9,9 +9,23 @@ export interface VlogItem {
   channel: string;
 }
 
+export interface VlogChannel {
+  channelId: string;
+  name: string;
+  /** "specific" — use listed videoIds; "playlist" — fetch all videos from playlistId */
+  mode: "specific" | "playlist";
+  videoIds?: string[];  // for mode: "specific"
+  playlistId?: string;  // for mode: "playlist"
+  /** Whether to show videos as cards. Default true. Set false to count in stats only. */
+  showCards?: boolean;
+  /** Channel to use for subscriber count on the stats panel */
+  useForStats?: boolean;
+}
+
 export interface VlogData {
   stats: VlogStats;
-  items: VlogItem[];
+  channels: VlogChannel[];
+  fallbackItems: VlogItem[];
 }
 
 const vlogs: VlogData = {
@@ -19,18 +33,23 @@ const vlogs: VlogData = {
     ytSubscribers: 0,
     totalViews: 0,
   },
-  items: [
+  channels: [
     {
-      youtubeId: "dQw4w9WgXcQ",
-      title: "Placeholder Vlog 1",
-      channel: "main",
+      channelId: "UC5RtQUsee1YFE2w5-bPD7mg",
+      name: "main",
+      mode: "specific",
+      videoIds: ["a7Zzv5EmWoQ", "ng5Lgsgja-M"],
+      showCards: false, // count in stats only, don't show as cards
     },
     {
-      youtubeId: "dQw4w9WgXcQ",
-      title: "Placeholder Vlog 2",
-      channel: "secondary",
+      channelId: "UCviOkZkMPFVyay9TRUe0VeQ",
+      name: "vlogs",
+      mode: "playlist",
+      playlistId: "PLtVChZFY2TxriMD6sF9o0Fsnw4R38rsnZ",
+      useForStats: true,
     },
   ],
+  fallbackItems: [],
 };
 
 export default vlogs;
