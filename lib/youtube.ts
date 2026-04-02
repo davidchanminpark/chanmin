@@ -167,7 +167,11 @@ export async function getLiveMusicStats(
   const channelId = process.env.YOUTUBE_CHANNEL_ID ?? "";
   const live = await getChannelStats(channelId);
   if (!live) return fallback;
-  return { ...fallback, ytSubscribers: live.ytSubscribers };
+  return {
+    ...fallback,
+    ytSubscribers: live.ytSubscribers,
+    ytTotalViews: live.totalViews,
+  };
 }
 
 export async function getLiveMusicYouTubeItems(
