@@ -1,17 +1,18 @@
 import MediaScroll from "@/components/music/MediaScroll";
 import StatsPanel from "@/components/music/StatsPanel";
-import music, { getTotalSpotifyStreams } from "@/data/music";
+import music, { getTotalSpotifyStreams, getTotalIgViews } from "@/data/music";
 import { getLiveMusicStats, getLiveMusicYouTubeItems } from "@/lib/youtube";
 
 export default async function MusicPage() {
   const [liveStats, allItems] = await Promise.all([
-    getLiveMusicStats({ ...music.stats, spotifyTotalStreams: 0 }),
+    getLiveMusicStats({ ...music.stats, spotifyTotalStreams: 0, igTotalViews: 0 }),
     getLiveMusicYouTubeItems(music.items),
   ]);
 
   const stats = {
     ...liveStats,
     spotifyTotalStreams: getTotalSpotifyStreams(music.items),
+    igTotalViews: getTotalIgViews(music.items),
   };
 
   const youtubeItems = allItems.filter((i) => i.type === "youtube");

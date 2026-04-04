@@ -1,7 +1,7 @@
 import Script from "next/script";
 import { MusicItem } from "@/data/music";
 
-export default function MediaCard({ type, embedId, title, roles }: MusicItem) {
+export default function MediaCard({ type, embedId, title, roles, subtype, views }: MusicItem) {
   if (type === "youtube") {
     return (
       <div className="flex-shrink-0 w-72">
@@ -45,14 +45,23 @@ export default function MediaCard({ type, embedId, title, roles }: MusicItem) {
   }
 
   if (type === "instagram") {
+    const permalink =
+      subtype === "reel"
+        ? `https://www.instagram.com/reel/${embedId}/`
+        : `https://www.instagram.com/p/${embedId}/`;
     return (
-      <div className="flex-shrink-0 w-72">
+      <div className="flex-shrink-0 w-72 flex flex-col gap-2">
         <blockquote
           className="instagram-media"
-          data-instgrm-permalink={`https://www.instagram.com/p/${embedId}/`}
+          data-instgrm-permalink={permalink}
           data-instgrm-version="14"
         />
         <Script src="//www.instagram.com/embed.js" strategy="lazyOnload" />
+        {views != null && (
+          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            {views.toLocaleString()} views
+          </span>
+        )}
       </div>
     );
   }

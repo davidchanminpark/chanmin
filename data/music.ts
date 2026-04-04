@@ -1,5 +1,6 @@
 export interface MusicStats {
   igFollowers: number;
+  /** Auto-computed from instagram item views — do not set manually */
   igTotalViews: number;
   ytSubscribers: number;
   ytTotalViews: number;
@@ -10,16 +11,21 @@ export interface MusicStats {
 
 export interface MusicItem {
   type: "youtube" | "instagram" | "spotify";
+  /** For instagram: the reel/post ID from the URL (instagram.com/reel/{embedId}/) */
   embedId: string;
   title: string;
-  /** Spotify stream count — update manually when you check Spotify for Artists */
+  /** "reel" or "post" for instagram items. Defaults to "post" if omitted. */
+  subtype?: "reel" | "post";
+  /** View count for instagram reels — update manually when you check the app */
+  views?: number;
+  /** Stream count for spotify tracks — update manually when you check Spotify for Artists */
   streams?: number;
   /** Role tags e.g. ["Co-writer", "Producer"] */
   roles?: string[];
 }
 
 export interface MusicData {
-  stats: Omit<MusicStats, "spotifyTotalStreams">;
+  stats: Omit<MusicStats, "spotifyTotalStreams" | "igTotalViews">;
   items: MusicItem[];
 }
 
@@ -30,10 +36,17 @@ export function getTotalSpotifyStreams(items: MusicItem[]): number {
     .reduce((sum, i) => sum + (i.streams ?? 0), 0);
 }
 
+/** Returns total views summed across all instagram items */
+export function getTotalIgViews(items: MusicItem[]): number {
+  return items
+    .filter((i) => i.type === "instagram")
+    .reduce((sum, i) => sum + (i.views ?? 0), 0);
+}
+
 const music: MusicData = {
   stats: {
+    // Update these manually when you check the Instagram app
     igFollowers: 0,
-    igTotalViews: 0,
     ytSubscribers: 0,
     ytTotalViews: 0,
     spotifyListeners: 0,
@@ -53,15 +66,19 @@ const music: MusicData = {
       streams: 100,
       roles: ["Producer"],
     },
+    // To add a reel: grab the ID from instagram.com/reel/{ID}/
+    // and add an entry like this:
+    // {
+    //   type: "instagram",
+    //   subtype: "reel",
+    //   embedId: "YOUR_REEL_ID",
+    //   title: "Reel title",
+    //   views: 1234,
+    // },
     {
       type: "youtube",
       embedId: "dQw4w9WgXcQ",
       title: "Placeholder YouTube Video",
-    },
-    {
-      type: "instagram",
-      embedId: "placeholder",
-      title: "Placeholder Instagram Post",
     },
   ],
 };
