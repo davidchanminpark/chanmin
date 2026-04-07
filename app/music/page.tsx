@@ -25,81 +25,97 @@ export default async function MusicPage() {
     )
   );
 
-  const heroStats = [
-    { value: stats.igTotalViews.toLocaleString(), label: "reel views" },
-    { value: stats.spotifyTotalStreams.toLocaleString(), label: "streams" },
-    { value: stats.igFollowers.toLocaleString(), label: "ig followers" },
-  ];
-
   return (
-    <main className="flex-1">
-      {/* ── Dark Hero ───────────────────────────────── */}
-      <section style={{ background: "#1a1a1a" }} className="px-6 pt-16 pb-14">
-        <div className="max-w-6xl mx-auto">
-          <p
-            className="text-xs text-[#6b6050] uppercase tracking-widest mb-5"
-            style={{ fontFamily: "var(--font-mono), monospace" }}
-          >
-            — rhythmic archive
-          </p>
-
+    <main className="grain flex-1 pt-32 pb-24">
+      <div className="max-w-7xl mx-auto px-8">
+        {/* ── Hero header ── */}
+        <header className="mb-16">
           <h1
-            className="text-6xl sm:text-7xl font-bold leading-[0.95] tracking-tight text-[#f5f0e8] mb-5"
-            style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
+            className="text-5xl md:text-7xl font-bold lowercase tracking-tighter mb-6"
+            style={{ color: "var(--on-surface)" }}
           >
-            Sound.
+            sound &amp; <br />archive
           </h1>
-
-          <p className="text-base text-[#7a6f65] leading-relaxed mb-12 max-w-md">
-            A sonic diary curated with intention — original compositions,
+          <p
+            className="text-lg md:text-xl max-w-2xl leading-relaxed"
+            style={{ color: "var(--on-surface-variant)" }}
+          >
+            a sonic diary curated with intention — original compositions,
             collaborations, and covers.
           </p>
+        </header>
 
-          {/* Inline stats */}
-          <div className="flex flex-wrap items-end gap-x-10 gap-y-4">
-            {heroStats.map(({ value, label }) => (
-              <div key={label} className="flex flex-col gap-1">
-                <span
-                  className="text-3xl font-bold text-[#fbd745]"
-                  style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
-                >
-                  {value}
-                </span>
-                <span
-                  className="text-xs text-[#6b6050] uppercase tracking-wider"
-                  style={{ fontFamily: "var(--font-mono), monospace" }}
-                >
-                  {label}
-                </span>
-              </div>
-            ))}
+        {/* ── Stats bar ── */}
+        <div
+          className="flex flex-wrap gap-x-10 gap-y-4 py-6 mb-16"
+          style={{ borderTop: "1px solid var(--outline-variant)", borderBottom: "1px solid var(--outline-variant)" }}
+        >
+          <div className="flex flex-col gap-1">
+            <span
+              className="text-2xl font-bold"
+              style={{ color: "var(--primary)" }}
+            >
+              {stats.spotifyTotalStreams.toLocaleString()}
+            </span>
+            <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
+              streams
+            </span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span
+              className="text-2xl font-bold"
+              style={{ color: "var(--primary)" }}
+            >
+              {stats.igTotalViews.toLocaleString()}
+            </span>
+            <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
+              reel views
+            </span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span
+              className="text-2xl font-bold"
+              style={{ color: "var(--primary)" }}
+            >
+              {stats.igFollowers.toLocaleString()}
+            </span>
+            <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
+              ig followers
+            </span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span
+              className="text-2xl font-bold"
+              style={{ color: "var(--primary)" }}
+            >
+              {stats.spotifyListeners.toLocaleString()}
+            </span>
+            <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
+              monthly listeners
+            </span>
           </div>
         </div>
-      </section>
 
-      {/* ── Content sections ────────────────────────── */}
-      <div className="bg-[#fbf9f5]">
-
-        {/* Released Tracks */}
+        {/* ── Released Tracks ── */}
         {spotifyItems.length > 0 && (
-          <section className="pt-10 pb-6">
-            <div className="max-w-6xl mx-auto px-6 mb-5">
-              <h2 className="text-xs font-semibold text-[#1a1a1a] uppercase tracking-widest">
+          <section className="mb-14">
+            <div className="flex items-baseline justify-between mb-5">
+              <h2
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--on-surface)" }}
+              >
                 Released Tracks
               </h2>
-              <p
-                className="text-xs text-[#a09890] mt-1"
-                style={{ fontFamily: "var(--font-mono), monospace" }}
-              >
+              <span className="text-xs" style={{ color: "var(--on-surface-variant)" }}>
                 {spotifyItems.length} track{spotifyItems.length !== 1 ? "s" : ""} ·{" "}
                 {stats.spotifyTotalStreams.toLocaleString()} streams
-              </p>
+              </span>
             </div>
             <MediaScroll items={spotifyItems} />
           </section>
         )}
 
-        {/* Instagram groups */}
+        {/* ── Instagram groups ── */}
         {igGroups.map((group) => {
           const items = allItems
             .filter(
@@ -109,44 +125,48 @@ export default async function MusicPage() {
             .reverse();
           const totalViews = items.reduce((sum, i) => sum + (i.views ?? 0), 0);
           return (
-            <section key={group} className="pt-10 pb-6 border-t border-[#e8e0d8]">
-              <div className="max-w-6xl mx-auto px-6 mb-5">
-                <h2 className="text-xs font-semibold text-[#1a1a1a] uppercase tracking-widest">
+            <section
+              key={group}
+              className="mb-14 pt-14"
+              style={{ borderTop: "1px solid var(--outline-variant)" }}
+            >
+              <div className="flex items-baseline justify-between mb-5">
+                <h2
+                  className="text-xs font-semibold uppercase tracking-widest"
+                  style={{ color: "var(--on-surface)" }}
+                >
                   {group}
                 </h2>
-                <p
-                  className="text-xs text-[#a09890] mt-1"
-                  style={{ fontFamily: "var(--font-mono), monospace" }}
-                >
+                <span className="text-xs" style={{ color: "var(--on-surface-variant)" }}>
                   {items.length} reel{items.length !== 1 ? "s" : ""} ·{" "}
                   {totalViews.toLocaleString()} views
-                </p>
+                </span>
               </div>
               <MediaScroll items={items} />
             </section>
           );
         })}
 
-        {/* YouTube */}
+        {/* ── YouTube ── */}
         {youtubeItems.length > 0 && (
-          <section className="pt-10 pb-6 border-t border-[#e8e0d8]">
-            <div className="max-w-6xl mx-auto px-6 mb-5">
-              <h2 className="text-xs font-semibold text-[#1a1a1a] uppercase tracking-widest">
+          <section
+            className="mb-14 pt-14"
+            style={{ borderTop: "1px solid var(--outline-variant)" }}
+          >
+            <div className="flex items-baseline justify-between mb-5">
+              <h2
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--on-surface)" }}
+              >
                 Video
               </h2>
-              <p
-                className="text-xs text-[#a09890] mt-1"
-                style={{ fontFamily: "var(--font-mono), monospace" }}
-              >
+              <span className="text-xs" style={{ color: "var(--on-surface-variant)" }}>
                 {youtubeItems.length} video{youtubeItems.length !== 1 ? "s" : ""}
-              </p>
+              </span>
             </div>
             <MediaScroll items={youtubeItems} />
           </section>
         )}
-
-        {/* Footer spacer */}
-        <div className="h-16" />
       </div>
     </main>
   );

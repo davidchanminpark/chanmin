@@ -22,6 +22,8 @@ export interface MusicItem {
   streams?: number;
   /** Role tags e.g. ["Co-writer", "Producer"] */
   roles?: string[];
+  /** Row label for grouping instagram items (e.g. "50 Day Songwriting Challenge") */
+  group?: string;
 }
 
 export interface MusicData {

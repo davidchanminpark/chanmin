@@ -1,51 +1,54 @@
 @import "tailwindcss";
 
+/* ── Stitch "Tactile Gallery" design system palette ── */
 :root {
-  --warm-bg: #fbf9f5;
-  --warm-surface: #f5ede4;
-  --warm-card: #fffcf7;
-  --accent: #fbd745;
-  --accent-dim: #f5c800;
-  --text-primary: #1a1a1a;
-  --text-muted: #6b6460;
-  --text-subtle: #a09890;
-  --border: #e8e0d8;
+  --bg:                 #fffcf7;
+  --surface-low:        #fcf9f3;
+  --surface:            #f6f4ec;
+  --surface-high:       #f0eee5;
+  --surface-highest:    #eae8de;
+  --primary:            #6a5c4c;
+  --primary-container:  #f3dfcb;
+  --secondary:          #706253;
+  --tertiary:           #67645d;
+  --on-surface:         #383831;
+  --on-surface-variant: #65655c;
+  --outline:            #818178;
+  --outline-variant:    #babab0;
+  --on-primary:         #fff6f0;
 }
 
 @theme inline {
-  --font-sans: var(--font-jakarta);
-  --font-mono: var(--font-mono);
-  --color-warm-bg: var(--warm-bg);
-  --color-warm-surface: var(--warm-surface);
-  --color-warm-card: var(--warm-card);
-  --color-accent: var(--accent);
-  --color-accent-dim: var(--accent-dim);
-  --color-text-primary: var(--text-primary);
-  --color-text-muted: var(--text-muted);
-  --color-text-subtle: var(--text-subtle);
-  --color-border: var(--border);
+  --font-sans: var(--font-sans);
 }
 
 body {
-  background: var(--warm-bg);
-  color: var(--text-primary);
-  font-family: var(--font-jakarta), system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--on-surface);
+  font-family: var(--font-sans), "Epilogue", system-ui, sans-serif;
 }
 
-/* Grain texture overlay */
+/* ── Faint aurora gradient fixed to viewport ── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 90% 10%,  rgba(255, 210, 215, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 70% at 10% 90%,  rgba(195, 225, 200, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 55% 45%,  rgba(243, 223, 203, 0.10) 0%, transparent 65%);
+}
+
+/* ── Grain texture (5% per design spec) ── */
 .grain::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.03;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-size: 256px 256px;
-}
-
-/* Monospace utility */
-.mono {
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  letter-spacing: -0.02em;
 }

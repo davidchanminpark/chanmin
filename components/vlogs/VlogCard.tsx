@@ -15,7 +15,7 @@ export default function VlogCard({ youtubeId, title, channel }: VlogItem) {
       {/* Thumbnail */}
       <div
         className="relative w-full overflow-hidden rounded-xl"
-        style={{ aspectRatio: "16/9", background: "#1a1a1a" }}
+        style={{ aspectRatio: "16/9", background: "var(--surface-highest)" }}
       >
         <Image
           src={thumbnail}
@@ -26,19 +26,18 @@ export default function VlogCard({ youtubeId, title, channel }: VlogItem) {
           unoptimized
         />
 
-        {/* Dark overlay on hover */}
+        {/* Overlay on hover */}
         <div
-          className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-40"
-          style={{ background: "#1a1a1a" }}
+          className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-20"
+          style={{ background: "var(--primary)" }}
         />
 
         {/* Play button */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
-            style={{ background: "rgba(251, 215, 69, 0.92)" }}
+            style={{ background: "var(--primary-container)" }}
           >
-            {/* Triangle */}
             <svg
               width="16"
               height="16"
@@ -47,7 +46,7 @@ export default function VlogCard({ youtubeId, title, channel }: VlogItem) {
               xmlns="http://www.w3.org/2000/svg"
               style={{ marginLeft: "2px" }}
             >
-              <path d="M4 2L14 8L4 14V2Z" fill="#1a1a1a" />
+              <path d="M4 2L14 8L4 14V2Z" fill="var(--primary)" />
             </svg>
           </div>
         </div>
@@ -57,9 +56,8 @@ export default function VlogCard({ youtubeId, title, channel }: VlogItem) {
           <span
             className="text-xs px-2.5 py-1 rounded-full"
             style={{
-              background: "rgba(26, 26, 26, 0.7)",
-              color: "#f5f0e8",
-              fontFamily: "var(--font-mono), monospace",
+              background: "rgba(255,252,247,0.85)",
+              color: "var(--primary)",
               backdropFilter: "blur(8px)",
             }}
           >
@@ -70,12 +68,15 @@ export default function VlogCard({ youtubeId, title, channel }: VlogItem) {
 
       {/* Title row */}
       <div className="mt-3 flex items-start justify-between gap-3">
-        <h3 className="text-sm font-semibold text-[#1a1a1a] leading-snug group-hover:text-[#6b5040] transition-colors line-clamp-2">
+        <h3
+          className="text-sm font-semibold leading-snug line-clamp-2 transition-colors"
+          style={{ color: "var(--on-surface)" }}
+        >
           {title}
         </h3>
         <span
-          className="text-xs text-[#a09890] flex-shrink-0 mt-0.5 transition-colors group-hover:text-[#1a1a1a]"
-          style={{ fontFamily: "var(--font-mono), monospace" }}
+          className="text-xs flex-shrink-0 mt-0.5 transition-colors"
+          style={{ color: "var(--outline)" }}
         >
           watch _
         </span>

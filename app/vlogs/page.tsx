@@ -8,60 +8,67 @@ export default async function VlogsPage() {
     getLiveVlogItems(vlogs.channels, vlogs.fallbackItems),
   ]);
 
-  const heroStats = [
-    { value: stats.totalViews.toLocaleString(), label: "total views" },
-    { value: stats.ytSubscribers.toLocaleString(), label: "subscribers" },
-    { value: items.length > 0 ? items.length.toLocaleString() : "—", label: "videos" },
-  ];
-
   return (
-    <main className="flex-1">
-      {/* ── Dark Hero ───────────────────────────────── */}
-      <section style={{ background: "#1a1a1a" }} className="px-6 pt-16 pb-14">
-        <div className="max-w-6xl mx-auto">
-          <p
-            className="text-xs text-[#6b6050] uppercase tracking-widest mb-5"
-            style={{ fontFamily: "var(--font-mono), monospace" }}
-          >
-            — kinetic archive
-          </p>
-
+    <main className="grain flex-1 pt-32 pb-24">
+      <div className="max-w-7xl mx-auto px-8">
+        {/* ── Hero header ── */}
+        <header className="mb-16">
           <h1
-            className="text-6xl sm:text-7xl font-bold leading-[0.95] tracking-tight text-[#f5f0e8] mb-5"
-            style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
+            className="text-5xl md:text-7xl font-bold lowercase tracking-tighter mb-6"
+            style={{ color: "var(--on-surface)" }}
           >
-            Vlogs.
+            vlogs &amp; <br />motion
           </h1>
-
-          <p className="text-base text-[#7a6f65] leading-relaxed mb-12 max-w-md">
-            Moving fragments of quiet afternoons, busy mornings, and the
-            intentional space between. Stories told in motion.
+          <p
+            className="text-lg md:text-xl max-w-2xl leading-relaxed"
+            style={{ color: "var(--on-surface-variant)" }}
+          >
+            moving fragments of quiet afternoons, busy mornings, and the
+            intentional space between. stories told in motion.
           </p>
+        </header>
 
-          {/* Inline stats */}
-          <div className="flex flex-wrap items-end gap-x-10 gap-y-4">
-            {heroStats.map(({ value, label }) => (
-              <div key={label} className="flex flex-col gap-1">
-                <span
-                  className="text-3xl font-bold text-[#fbd745]"
-                  style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
-                >
-                  {value}
-                </span>
-                <span
-                  className="text-xs text-[#6b6050] uppercase tracking-wider"
-                  style={{ fontFamily: "var(--font-mono), monospace" }}
-                >
-                  {label}
-                </span>
-              </div>
-            ))}
+        {/* ── Stats bar ── */}
+        <div
+          className="flex flex-wrap gap-x-10 gap-y-4 py-6 mb-16"
+          style={{ borderTop: "1px solid var(--outline-variant)", borderBottom: "1px solid var(--outline-variant)" }}
+        >
+          <div className="flex flex-col gap-1">
+            <span
+              className="text-2xl font-bold"
+              style={{ color: "var(--primary)" }}
+            >
+              {stats.totalViews.toLocaleString()}
+            </span>
+            <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
+              total views
+            </span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span
+              className="text-2xl font-bold"
+              style={{ color: "var(--primary)" }}
+            >
+              {stats.ytSubscribers.toLocaleString()}
+            </span>
+            <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
+              subscribers
+            </span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span
+              className="text-2xl font-bold"
+              style={{ color: "var(--primary)" }}
+            >
+              {items.length > 0 ? items.length : "—"}
+            </span>
+            <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
+              videos
+            </span>
           </div>
         </div>
-      </section>
 
-      {/* ── Video Grid ──────────────────────────────── */}
-      <div className="bg-[#fbf9f5] pt-12 pb-20">
+        {/* ── Video Grid ── */}
         <VlogScroll items={items} />
       </div>
     </main>
