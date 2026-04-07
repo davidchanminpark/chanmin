@@ -28,17 +28,43 @@ body {
   font-family: var(--font-sans), "Epilogue", system-ui, sans-serif;
 }
 
-/* ── Faint aurora gradient fixed to viewport ── */
+/* ── Pastel rectangular overlays (matched to Stitch screenshot) ── */
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: -8vw;
   z-index: -1;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 70% 60% at 90% 10%,  rgba(255, 210, 215, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 70% at 10% 90%,  rgba(195, 225, 200, 0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 55% 45%,  rgba(243, 223, 203, 0.10) 0%, transparent 65%);
+  filter: blur(0px);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-image:
+    /* sage square — upper-left, faint */
+    linear-gradient(rgba(228, 240, 226, 0.55), rgba(228, 240, 226, 0.55)),
+    /* pink rectangle — top right, prominent */
+    linear-gradient(rgba(252, 222, 226, 0.70), rgba(252, 222, 226, 0.70)),
+    /* pink rectangle — mid right, large */
+    linear-gradient(rgba(252, 222, 226, 0.55), rgba(252, 222, 226, 0.55)),
+    /* sage square — center-mid */
+    linear-gradient(rgba(226, 238, 224, 0.50), rgba(226, 238, 224, 0.50)),
+    /* pink rectangle — lower-center, soft */
+    linear-gradient(rgba(252, 222, 226, 0.45), rgba(252, 222, 226, 0.45)),
+    /* sage square — bottom-right corner */
+    linear-gradient(rgba(228, 240, 226, 0.40), rgba(228, 240, 226, 0.40));
+  background-size:
+    35vw 22vh,
+    32vw 28vh,
+    38vw 26vh,
+    28vw 24vh,
+    44vw 22vh,
+    30vw 26vh;
+  background-position:
+    2% 4%,
+    66% 2%,
+    62% 32%,
+    35% 48%,
+    28% 70%,
+    74% 72%;
 }
 
 /* ── Grain texture (5% per design spec) ── */
