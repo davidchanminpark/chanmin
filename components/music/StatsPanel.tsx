@@ -3,8 +3,8 @@ import { MusicStats } from "@/data/music";
 function StatRow({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-sm text-zinc-500 dark:text-zinc-400">{label}</span>
-      <span className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+      <span className="text-sm" style={{ color: "var(--on-surface-variant)" }}>{label}</span>
+      <span className="text-xl font-semibold" style={{ color: "var(--on-surface)" }}>
         {value.toLocaleString()}
       </span>
     </div>

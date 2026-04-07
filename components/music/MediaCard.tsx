@@ -12,7 +12,10 @@ export default function MediaCard({
   if (type === "youtube") {
     return (
       <div className="flex-shrink-0 w-72 flex flex-col gap-2">
-        <div className="rounded-xl overflow-hidden" style={{ background: "#1a1a1a" }}>
+        <div
+          className="rounded-xl overflow-hidden"
+          style={{ background: "var(--surface-highest)" }}
+        >
           <iframe
             src={`https://www.youtube.com/embed/${embedId}`}
             title={title}
@@ -23,7 +26,8 @@ export default function MediaCard({
           />
         </div>
         <p
-          className="text-xs text-[#6b6460] truncate px-1"
+          className="text-xs truncate px-1"
+          style={{ color: "var(--on-surface-variant)" }}
           title={title}
         >
           {title}
@@ -35,8 +39,11 @@ export default function MediaCard({
   if (type === "spotify") {
     return (
       <div
-        className="flex-shrink-0 w-72 flex flex-col rounded-xl overflow-hidden border border-[#e8e0d8]"
-        style={{ background: "#fffcf7" }}
+        className="flex-shrink-0 w-72 flex flex-col rounded-xl overflow-hidden"
+        style={{
+          background: "var(--surface-low)",
+          border: "1px solid var(--outline-variant)",
+        }}
       >
         <iframe
           src={`https://open.spotify.com/embed/track/${embedId}`}
@@ -52,7 +59,10 @@ export default function MediaCard({
               <span
                 key={role}
                 className="text-xs px-2.5 py-0.5 rounded-full"
-                style={{ background: "#f0e6d8", color: "#6b5040" }}
+                style={{
+                  background: "var(--primary-container)",
+                  color: "var(--primary)",
+                }}
               >
                 {role}
               </span>
@@ -90,13 +100,17 @@ export default function MediaCard({
         </div>
         <Script src="//www.instagram.com/embed.js" strategy="lazyOnload" />
         <div className="flex items-center justify-between px-1">
-          <span className="text-xs text-[#6b6460] truncate" title={title}>
+          <span
+            className="text-xs truncate"
+            style={{ color: "var(--on-surface-variant)" }}
+            title={title}
+          >
             {title}
           </span>
           {views != null && (
             <span
-              className="text-xs text-[#a09890] flex-shrink-0 ml-2"
-              style={{ fontFamily: "var(--font-mono), monospace" }}
+              className="text-xs flex-shrink-0 ml-2"
+              style={{ color: "var(--outline)" }}
             >
               {views.toLocaleString()}
             </span>
