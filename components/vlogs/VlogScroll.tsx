@@ -13,9 +13,14 @@ export default function VlogScroll({ items }: { items: VlogItem[] }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-10">
-      {items.map((item) => (
-        <VlogCard key={item.youtubeId} {...item} />
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-10 pt-2">
+      {items.map((item, index) => (
+        <div
+          key={item.youtubeId}
+          className={index === 0 ? "sm:col-span-2" : undefined}
+        >
+          <VlogCard {...item} featured={index === 0} />
+        </div>
       ))}
     </div>
   );

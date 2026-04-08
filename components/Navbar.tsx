@@ -1,30 +1,44 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import StudioLink from "@/components/StudioLink";
 
 const navLinks = [
-  { href: "/coding", label: "work" },
-  { href: "/music",  label: "sound" },
-  { href: "/vlogs",  label: "vlogs" },
+  { href: "/#code", label: "code" },
+  { href: "/#music",  label: "music" },
+  { href: "/#vlogs",  label: "vlogs" },
 ];
 
 export default function Navbar() {
-  const pathname = usePathname();
+  const [activeHash, setActiveHash] = useState("");
+
+  useEffect(() => {
+    const updateHash = () => {
+      setActiveHash(window.location.hash || "");
+    };
+
+    updateHash();
+    window.addEventListener("hashchange", updateHash);
+    return () => {
+      window.removeEventListener("hashchange", updateHash);
+    };
+  }, []);
+
   return (
     <header
+      data-square-blocker
       className="fixed top-0 w-full z-50"
       style={{ background: "rgba(255,252,247,0.75)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
     >
       <nav className="max-w-7xl mx-auto px-8 py-5 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold lowercase tracking-tight" style={{ color: "var(--on-surface)" }}>
-          chanmin
-        </Link>
+        <StudioLink href="/" className="text-xl font-bold lowercase tracking-tight" style={{ color: "var(--on-surface)" }}>
+          chanmin's studio
+        </StudioLink>
         <div className="hidden md:flex items-center gap-10">
           {navLinks.map(({ href, label }) => {
-            const active = pathname === href || pathname.startsWith(href + "/");
+            const active = activeHash === href.replace("/", "");
             return (
-              <Link
+              <StudioLink
                 key={href}
                 href={href}
                 className="text-sm lowercase tracking-tight transition-colors duration-200"
@@ -35,7 +49,7 @@ export default function Navbar() {
                 }}
               >
                 {label}
-              </Link>
+              </StudioLink>
             );
           })}
         </div>

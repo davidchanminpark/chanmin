@@ -1,86 +1,120 @@
-import Image from "next/image";
-import { VlogItem } from "@/data/vlogs";
+"use client";
 
-export default function VlogCard({ youtubeId, title, channel }: VlogItem) {
-  const thumbnail = `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`;
-  const watchUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
+import Image from "next/image";
+import { useState } from "react";
+import { VlogItem } from "@/data/vlogs";
+import { formatDurationClock } from "@/lib/duration";
+
+export default function VlogCard({
+  youtubeId,
+  title,
+  durationSeconds,
+  featured = false,
+}: VlogItem & { featured?: boolean }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [thumbnailSrc, setThumbnailSrc] = useState(
+    `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
+  );
+  const durationLabel = formatDurationClock(durationSeconds);
 
   return (
-    <a
-      href={watchUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block"
+    <article
+      data-square-blocker
+      className="group rounded-2xl p-3 md:p-4 transition-transform duration-300 hover:-translate-y-1"
+      style={{
+        background: featured ? "var(--surface-high)" : "var(--surface-low)",
+        border: featured
+          ? "1px solid var(--primary)"
+          : "1px solid var(--outline-variant)",
+        boxShadow: featured ? "0 10px 30px rgba(0,0,0,0.08)" : "none",
+      }}
     >
-      {/* Thumbnail */}
       <div
         className="relative w-full overflow-hidden rounded-xl"
         style={{ aspectRatio: "16/9", background: "var(--surface-highest)" }}
       >
-        <Image
-          src={thumbnail}
-          alt={title}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 50vw"
-          unoptimized
-        />
-
-        {/* Overlay on hover */}
-        <div
-          className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-20"
-          style={{ background: "var(--primary)" }}
-        />
-
-        {/* Play button */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            className="w-12 h-12 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
-            style={{ background: "var(--primary-container)" }}
+        {isPlaying ? (
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`}
+            title={title}
+            className="h-full w-full"
+            allowFullScreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsPlaying(true)}
+            className="absolute inset-0 block h-full w-full cursor-pointer text-left"
+            aria-label={`Play ${title}`}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ marginLeft: "2px" }}
-            >
-              <path d="M4 2L14 8L4 14V2Z" fill="var(--primary)" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Channel badge */}
-        <div className="absolute top-3 left-3">
-          <span
-            className="text-xs px-2.5 py-1 rounded-full"
-            style={{
-              background: "rgba(255,252,247,0.85)",
-              color: "var(--primary)",
-              backdropFilter: "blur(8px)",
-            }}
-          >
-            {channel}
-          </span>
-        </div>
+            <Image
+              src={thumbnailSrc}
+              alt={title}
+              fill
+              className="object-cover"
+              sizes={featured ? "(max-width: 768px) 100vw, 80vw" : "(max-width: 768px) 100vw, 50vw"}
+              unoptimized
+              priority={featured}
+              onError={() => {
+                if (thumbnailSrc.includes("maxresdefault")) {
+                  setThumbnailSrc(
+                    `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+                  );
+                }
+              }}
+            />
+            <div
+              className="absolute inset-0 transition-opacity duration-300"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(26,22,20,0.08) 0%, rgba(26,22,20,0.3) 100%)",
+              }}
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div
+                className="flex h-16 w-16 items-center justify-center rounded-full border"
+                style={{
+                  background: "rgba(255,252,247,0.82)",
+                  borderColor: "rgba(255,252,247,0.65)",
+                  backdropFilter: "blur(12px)",
+                  color: "var(--primary)",
+                }}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ marginLeft: "2px" }}
+                >
+                  <path d="M5 3.5L16 10L5 16.5V3.5Z" fill="currentColor" />
+                </svg>
+              </div>
+            </div>
+          </button>
+        )}
       </div>
 
-      {/* Title row */}
-      <div className="mt-3 flex items-start justify-between gap-3">
+      <div className="mt-4 flex items-start justify-between gap-3">
         <h3
-          className="text-sm font-semibold leading-snug line-clamp-2 transition-colors"
+          className={`font-semibold leading-snug transition-colors ${
+            featured ? "text-lg md:text-xl line-clamp-3" : "text-sm line-clamp-2"
+          }`}
           style={{ color: "var(--on-surface)" }}
         >
           {title}
         </h3>
-        <span
-          className="text-xs flex-shrink-0 mt-0.5 transition-colors"
-          style={{ color: "var(--outline)" }}
-        >
-          watch _
-        </span>
+        {durationLabel && (
+          <span
+            className="text-xs flex-shrink-0 mt-0.5"
+            style={{ color: "var(--outline)" }}
+          >
+            {durationLabel}
+          </span>
+        )}
       </div>
-    </a>
+    </article>
   );
 }

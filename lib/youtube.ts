@@ -1,5 +1,6 @@
 import { MusicItem, MusicStats } from "@/data/music";
 import { VlogChannel, VlogItem, VlogStats } from "@/data/vlogs";
+import { parseYouTubeDurationToSeconds } from "@/lib/duration";
 
 const BASE_URL = "https://www.googleapis.com/youtube/v3";
 const REVALIDATE = { next: { revalidate: 3600 } };
@@ -37,7 +38,7 @@ export async function getChannelStats(
 export async function getRecentVideos(
   channelId: string,
   limit = 5
-): Promise<{ embedId: string; title: string }[] | null> {
+): Promise<{ embedId: string; title: string; description: string; views: number; durationSeconds: number }[] | null> {
   const key = apiKey();
   if (!key || !channelId) return null;
 
@@ -49,14 +50,11 @@ export async function getRecentVideos(
     if (!res.ok) return null;
 
     const data = await res.json();
-    return (
-      data.items?.map(
-        (item: { id: { videoId: string }; snippet: { title: string } }) => ({
-          embedId: item.id.videoId,
-          title: item.snippet.title,
-        })
-      ) ?? null
-    );
+    const videoIds =
+      data.items?.map((item: { id: { videoId: string } }) => item.id.videoId) ?? [];
+    const details = await getVideoDetails(videoIds);
+
+    return details.length > 0 ? details : null;
   } catch {
     return null;
   }
@@ -89,13 +87,13 @@ async function getPlaylistVideoIds(playlistId: string): Promise<string[]> {
 /** Fetch snippet + statistics for specific video IDs (max 50 per call). */
 async function getVideoDetails(
   videoIds: string[]
-): Promise<{ embedId: string; title: string; views: number }[]> {
+): Promise<{ embedId: string; title: string; description: string; views: number; durationSeconds: number }[]> {
   const key = apiKey();
   if (!key || videoIds.length === 0) return [];
 
   try {
     const res = await fetch(
-      `${BASE_URL}/videos?part=snippet,statistics&id=${videoIds.join(",")}&key=${key}`,
+      `${BASE_URL}/videos?part=snippet,statistics,contentDetails&id=${videoIds.join(",")}&key=${key}`,
       REVALIDATE
     );
     if (!res.ok) return [];
@@ -105,12 +103,17 @@ async function getVideoDetails(
       data.items?.map(
         (item: {
           id: string;
-          snippet: { title: string };
+          snippet: { title: string; description?: string };
           statistics: { viewCount?: string };
+          contentDetails: { duration?: string };
         }) => ({
           embedId: item.id,
           title: item.snippet.title,
+          description: item.snippet.description ?? "",
           views: parseInt(item.statistics.viewCount ?? "0", 10),
+          durationSeconds: parseYouTubeDurationToSeconds(
+            item.contentDetails.duration ?? ""
+          ),
         })
       ) ?? []
     );
@@ -121,20 +124,26 @@ async function getVideoDetails(
 
 async function getItemsForChannel(
   channel: VlogChannel
-): Promise<{ items: VlogItem[]; views: number }> {
+): Promise<{ items: VlogItem[]; views: number; durationSeconds: number }> {
   if (channel.mode === "specific" && channel.videoIds?.length) {
     const details = await getVideoDetails(channel.videoIds);
     const totalViews = details.reduce((sum, v) => sum + v.views, 0);
+    const totalDurationSeconds = details.reduce(
+      (sum, v) => sum + v.durationSeconds,
+      0
+    );
     if (channel.showCards === false) {
-      return { items: [], views: totalViews };
+      return { items: [], views: totalViews, durationSeconds: totalDurationSeconds };
     }
     return {
       items: details.map((v) => ({
         youtubeId: v.embedId,
         title: v.title,
         channel: channel.name,
+        durationSeconds: v.durationSeconds,
       })),
       views: totalViews,
+      durationSeconds: totalDurationSeconds,
     };
   }
 
@@ -142,21 +151,27 @@ async function getItemsForChannel(
     const videoIds = await getPlaylistVideoIds(channel.playlistId);
     const details = await getVideoDetails(videoIds);
     const totalViews = details.reduce((sum, v) => sum + v.views, 0);
+    const totalDurationSeconds = details.reduce(
+      (sum, v) => sum + v.durationSeconds,
+      0
+    );
 
     if (channel.showCards === false) {
-      return { items: [], views: totalViews };
+      return { items: [], views: totalViews, durationSeconds: totalDurationSeconds };
     }
     return {
       items: details.map((v) => ({
         youtubeId: v.embedId,
         title: v.title,
         channel: channel.name,
+        durationSeconds: v.durationSeconds,
       })),
       views: totalViews,
+      durationSeconds: totalDurationSeconds,
     };
   }
 
-  return { items: [], views: 0 };
+  return { items: [], views: 0, durationSeconds: 0 };
 }
 
 // ─── Music ───────────────────────────────────────────────────────────────────
@@ -185,6 +200,10 @@ export async function getLiveMusicYouTubeItems(
     type: "youtube",
     embedId: v.embedId,
     title: v.title,
+    description: v.description,
+    group: "Youtube Covers",
+    views: v.views,
+    durationSeconds: v.durationSeconds,
   }));
 
   const otherItems = fallback.filter((item) => item.type !== "youtube");
@@ -206,10 +225,18 @@ export async function getLiveVlogStats(
   ]);
 
   const totalViews = channelResults.reduce((sum, r) => sum + r.views, 0);
+  const totalDurationSeconds = channelResults.reduce(
+    (sum, r) => sum + r.durationSeconds,
+    0
+  );
 
   return {
     ytSubscribers: subscriberData?.ytSubscribers ?? fallback.ytSubscribers,
     totalViews: totalViews > 0 ? totalViews : fallback.totalViews,
+    totalDurationSeconds:
+      totalDurationSeconds > 0
+        ? totalDurationSeconds
+        : fallback.totalDurationSeconds,
   };
 }
 

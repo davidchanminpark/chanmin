@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function CodingPage() {
+export default function CodePage() {
   redirect("/#code");
 }

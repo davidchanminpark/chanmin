@@ -3,73 +3,71 @@ export interface Project {
   description: string;
   tags: string[];
   status: "active" | "stable" | "experimental" | "archived";
-  category: "frontend" | "fullstack" | "tools";
+  category: "web" | "mobile" | "tools";
   githubUrl?: string;
-  stars?: number;
   year: number;
 }
 
 const projects: Project[] = [
   {
+    title: "time-my-life",
+    description:
+      "A time tracking iOS and watchOS app that records and analyzes your daily activities and personal goals. Syncs with Apple Watch. For those curious about how they spend time.",
+    tags: ["Swift", "CoreData", "Watch Connectivity"],
+    status: "stable",
+    category: "mobile",
+    githubUrl: "https://github.com/davidchanminpark/time-my-life",
+    year: 2024,
+  },
+  {
+    title: "psychiatrist",
+    description:
+      "An online version of the group game 'psychiatrist,' with a new 'crazy patient' rule variant.",
+    tags: ["React", "Node.js", "Socket.io"],
+    status: "stable",
+    category: "web",
+    githubUrl: "https://github.com/davidchanminpark/psychiatrist",
+    year: 2023,
+  },
+  {
+    title: "1q-a-day",
+    description:
+      "Daily journaling app where users get asked the same question the same day of the year.",
+    tags: ["Swift", "SwiftUI", "SwiftData"],
+    status: "stable",
+    category: "mobile",
+    githubUrl: "https://github.com/davidchanminpark/1q-a-day",
+    year: 2024,
+  },
+  {
     title: "chanmin.dev",
     description:
-      "Personal portfolio site — music, vlogs, and work in one place. Built with Next.js App Router and Tailwind CSS v4.",
+      "Personal portfolio site — music, vlogs, and work in one place. Built with Next.js and Tailwind CSS.",
     tags: ["Next.js", "TypeScript", "Tailwind"],
     status: "active",
-    category: "frontend",
+    category: "web",
     githubUrl: "https://github.com/davidchanminpark/chanmin",
-    stars: 4,
     year: 2024,
   },
   {
-    title: "react-audio-hooks",
+    title: "roadtrip",
     description:
-      "Lightweight React hooks for the Web Audio API — gain nodes, analyser, oscillator, and playback state management.",
-    tags: ["React", "TypeScript", "Web Audio API"],
+      "A music playlist sharing app where users can create temporary queues.",
+    tags: ["Objective-C", "Swift", "Spotify API"],
     status: "stable",
-    category: "frontend",
-    stars: 31,
-    year: 2023,
-  },
-  {
-    title: "songlog",
-    description:
-      "50-day songwriting challenge tracker. Logs daily entries, view counts synced from Instagram, and streak data.",
-    tags: ["Next.js", "Prisma", "PostgreSQL"],
-    status: "experimental",
-    category: "fullstack",
-    stars: 7,
+    category: "mobile",
+    githubUrl: "https://github.com/davidchanminpark/roadtrip",
     year: 2024,
   },
   {
-    title: "vlog-sync",
+    title: "dew",
     description:
-      "CLI tool that pulls YouTube and Instagram metadata and writes structured JSON for static site generation.",
-    tags: ["Node.js", "YouTube API", "CLI"],
-    status: "experimental",
-    category: "tools",
-    stars: 12,
-    year: 2024,
-  },
-  {
-    title: "motion-palette",
-    description:
-      "Zero-dependency animation utility library. Keyframe helpers, easing curves, and a stagger composition API.",
-    tags: ["TypeScript", "CSS", "Animation"],
+      "Clothing marketplace app where users can buy and sell used clothing with a focus on sustainability.",
+    tags: ["Node.js", "MongoDB", "HTML", "CSS"],
     status: "stable",
-    category: "frontend",
-    stars: 58,
+    category: "web",
+    githubUrl: "https://github.com/davidchanminpark/csprojects/tree/master/Clothing%20Marketplace%20App",
     year: 2023,
-  },
-  {
-    title: "stream-dashboard",
-    description:
-      "Music streaming analytics dashboard — aggregates Spotify for Artists data and renders trend charts.",
-    tags: ["Next.js", "Recharts", "Spotify API"],
-    status: "experimental",
-    category: "fullstack",
-    stars: 9,
-    year: 2024,
   },
 ];
 

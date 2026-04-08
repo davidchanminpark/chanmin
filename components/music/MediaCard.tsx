@@ -1,5 +1,5 @@
-import Script from "next/script";
 import { MusicItem } from "@/data/music";
+import { formatDurationClock } from "@/lib/duration";
 
 export default function MediaCard({
   type,
@@ -7,11 +7,20 @@ export default function MediaCard({
   title,
   roles,
   subtype,
-  views,
+  durationSeconds,
 }: MusicItem) {
+  const durationLabel = formatDurationClock(durationSeconds);
+
   if (type === "youtube") {
     return (
-      <div className="flex-shrink-0 w-72 flex flex-col gap-2">
+      <div
+        data-square-blocker
+        className="group flex-shrink-0 w-[28rem] max-w-[85vw] rounded-2xl p-3 md:p-4 flex flex-col gap-3 transition-transform duration-300 hover:-translate-y-1"
+        style={{
+          background: "var(--surface-low)",
+          border: "1px solid var(--outline-variant)",
+        }}
+      >
         <div
           className="rounded-xl overflow-hidden"
           style={{ background: "var(--surface-highest)" }}
@@ -19,19 +28,29 @@ export default function MediaCard({
           <iframe
             src={`https://www.youtube.com/embed/${embedId}`}
             title={title}
-            width="288"
-            height="162"
+            width="448"
+            height="252"
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
         </div>
-        <p
-          className="text-xs truncate px-1"
-          style={{ color: "var(--on-surface-variant)" }}
-          title={title}
-        >
-          {title}
-        </p>
+        <div className="flex items-center justify-between gap-2 px-1">
+          <p
+            className="text-xs truncate"
+            style={{ color: "var(--on-surface-variant)" }}
+            title={title}
+          >
+            {title}
+          </p>
+          {durationLabel && (
+            <span
+              className="text-xs flex-shrink-0"
+              style={{ color: "var(--outline)" }}
+            >
+              {durationLabel}
+            </span>
+          )}
+        </div>
       </div>
     );
   }
@@ -39,7 +58,8 @@ export default function MediaCard({
   if (type === "spotify") {
     return (
       <div
-        className="flex-shrink-0 w-72 flex flex-col rounded-xl overflow-hidden"
+        data-square-blocker
+        className="group flex-shrink-0 w-72 flex flex-col rounded-xl overflow-hidden transition-transform duration-300 hover:-translate-y-1"
         style={{
           background: "var(--surface-low)",
           border: "1px solid var(--outline-variant)",
@@ -79,7 +99,14 @@ export default function MediaCard({
         ? `https://www.instagram.com/reel/${embedId}/`
         : `https://www.instagram.com/p/${embedId}/`;
     return (
-      <div className="flex-shrink-0 w-64 flex flex-col gap-2">
+      <div
+        data-square-blocker
+        className="group flex-shrink-0 w-64 rounded-2xl p-3 md:p-4 flex flex-col gap-2 transition-transform duration-300 hover:-translate-y-1"
+        style={{
+          background: "var(--surface-low)",
+          border: "1px solid var(--outline-variant)",
+        }}
+      >
         <div
           style={{
             position: "relative",
@@ -89,7 +116,7 @@ export default function MediaCard({
           }}
         >
           <div
-            style={{ position: "absolute", top: "-60px", left: "-5px", right: 0 }}
+            style={{ position: "absolute", top: "-60px", left: "-50px", right: "0px", transform: "scale(1.01)", transformOrigin: "center center" }}
           >
             <blockquote
               className="instagram-media"
@@ -98,7 +125,6 @@ export default function MediaCard({
             />
           </div>
         </div>
-        <Script src="//www.instagram.com/embed.js" strategy="lazyOnload" />
         <div className="flex items-center justify-between px-1">
           <span
             className="text-xs truncate"
@@ -107,12 +133,12 @@ export default function MediaCard({
           >
             {title}
           </span>
-          {views != null && (
+          {durationLabel && (
             <span
               className="text-xs flex-shrink-0 ml-2"
               style={{ color: "var(--outline)" }}
             >
-              {views.toLocaleString()}
+              {durationLabel}
             </span>
           )}
         </div>

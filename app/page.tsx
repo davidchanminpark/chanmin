@@ -1,45 +1,71 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import Image from "next/image";
+import PopCount from "@/components/PopCount";
+import CodeSection from "@/components/sections/CodeSection";
+import MusicSection from "@/components/sections/MusicSection";
+import SectionFallback from "@/components/sections/SectionFallback";
+import VlogsSection from "@/components/sections/VlogsSection";
+import StudioLink from "@/components/StudioLink";
+import StudioViewShell from "@/components/StudioViewShell";
+import { getGitHubOverview } from "@/lib/github";
 
-const sections = [
-  {
-    num: "01", href: "/coding", label: "work",
-    description: "Building tools for productivity, community, and creative work automation",
-    meta: "24 repos · 1.2k commits ytd",
-    bg: "var(--surface-highest)",
-  },
-  {
-    num: "02", href: "/music", label: "sound",
-    description: "Original songs, covers, and live sessions. Edited on Logic Pro X",
-    meta: "Spotify · YouTube · Instagram",
-    bg: "var(--primary-container)",
-  },
-  {
-    num: "03", href: "/vlogs", label: "vlogs",
-    description: "Retreat episodes and highlights. Edited on Final Cut Pro",
-    meta: "5 stories and counting",
-    bg: "var(--surface-high)",
-  },
-];
+function formatCompactNumber(value: number): string {
+  return new Intl.NumberFormat("en", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
 
-export default function Home() {
-  return (
-    <main className="grain flex-1 pt-32 pb-24">
+export default async function Home() {
+  const github = await getGitHubOverview();
+  const codingMeta = [
+    `${github.repoCount} repos`,
+    github.contributionsYtd > 0
+      ? `${formatCompactNumber(github.contributionsYtd)} contributions ytd`
+      : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const sections = [
+    {
+      num: "01", href: "/#code", label: "code",
+      description: "Apps for productivity, community building, and creative work automation",
+      meta: codingMeta,
+      bg: "var(--surface-highest)",
+    },
+    {
+      num: "02", href: "/#music", label: "music",
+      description: "Original songs, covers, and live sessions. Edited on Logic Pro X",
+      meta: "Spotify · YouTube · Instagram",
+      bg: "var(--primary-container)",
+    },
+    {
+      num: "03", href: "/#vlogs", label: "vlogs",
+      description: "Retreat episodes and highlights. Edited on Final Cut Pro",
+      meta: "5 stories and counting",
+      bg: "var(--surface-high)",
+    },
+  ];
+
+  const homeView = (
+    <>
       {/* ── Hero ── */}
       <section className="max-w-7xl mx-auto px-8 mb-20">
         <p className="text-sm lowercase tracking-widest mb-6" style={{ color: "var(--outline)" }}>
-          chanmin park
+          pops : <PopCount />
         </p>
 
         <h1
           className="text-6xl sm:text-7xl md:text-8xl font-bold lowercase leading-[0.9] tracking-tighter mb-8"
           style={{ color: "var(--on-surface)" }}
         >
-          /create
+          /cr
+          <span style={{ color: "var(--outline)", opacity: 0.75 }}>eate</span>
           <br />
-          compose{" "}
+          compose
+          <br />
           <span className="relative inline-block">
-            &amp; capture
+          <span style={{ color: "var(--outline)", opacity: 0.75 }}>&amp;</span> capture
             <span
               className="absolute -bottom-1 left-0 w-full h-3 -z-10"
               style={{ background: "var(--primary-container)" }}
@@ -49,33 +75,33 @@ export default function Home() {
         </h1>
 
         <p className="text-xl mb-10 max-w-lg leading-relaxed" style={{ color: "var(--on-surface-variant)" }}>
-          a portfolio
+          a portfolio of things i make
         </p>
 
         <div className="flex items-center gap-4 flex-wrap">
-          <Link
-            href="/coding"
+          <StudioLink
+            href="/#code"
             className="px-6 py-2.5 rounded-full text-sm lowercase font-medium transition-all"
             style={{ background: "var(--primary)", color: "var(--on-primary)" }}
           >
             explore work
-          </Link>
-          <Link
-            href="/music"
+          </StudioLink>
+          <StudioLink
+            href="/#music"
             className="text-sm lowercase font-bold transition-all hover:underline underline-offset-4 decoration-2"
             style={{ color: "var(--primary)" }}
           >
-            sound →
-          </Link>
+            music →
+          </StudioLink>
         </div>
 
         {/* Identity tag */}
-        <div className="mt-16 flex items-center gap-4">
+        <div className="mt-10 flex items-center gap-4">
           <div className="w-11 h-11 rounded-full overflow-hidden flex-shrink-0" style={{ background: "var(--surface-highest)" }}>
             <Image src="/avatar.svg" width={44} height={44} alt="Chanmin" className="w-full h-full object-cover" />
           </div>
           <div>
-            <p className="text-sm font-semibold lowercase" style={{ color: "var(--on-surface)" }}>chanmin</p>
+            <p className="text-sm font-semibold lowercase" style={{ color: "var(--on-surface)" }}>chanmin park</p>
             <p className="text-xs lowercase" style={{ color: "var(--outline)" }}>currently based in san francisco, ca</p>
           </div>
         </div>
@@ -83,18 +109,18 @@ export default function Home() {
 
       {/* ── Section divider ── */}
       <div className="max-w-7xl mx-auto px-8">
-        <div style={{ borderTop: "1px solid rgba(186,186,176,0.2)" }} />
+        <div style={{ borderTop: "1px solid var(--outline-variant)" }} />
       </div>
 
       {/* ── Archive cards ── */}
-      <section className="max-w-7xl mx-auto px-8 pt-16">
+      <section className="max-w-7xl mx-auto px-8 pt-10">
         <p className="text-xs uppercase tracking-widest mb-8" style={{ color: "var(--outline)" }}>
           selected archive
         </p>
 
         <div className="grid md:grid-cols-3 gap-4">
           {sections.map((s) => (
-            <Link key={s.href} href={s.href} className="group block">
+            <StudioLink key={s.href} href={s.href} className="group block">
               <div
                 className="rounded-xl p-7 h-full flex flex-col justify-between transition-all duration-300 group-hover:-translate-y-1"
                 style={{ background: s.bg }}
@@ -117,10 +143,33 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-            </Link>
+            </StudioLink>
           ))}
         </div>
       </section>
+    </>
+  );
+
+  return (
+    <main className="grain flex-1 pt-32 pb-24">
+      <StudioViewShell
+        home={homeView}
+        code={
+          <Suspense fallback={<SectionFallback eyebrow="code" titleWidth="22rem" subtitleWidth="42rem" />}>
+            <CodeSection />
+          </Suspense>
+        }
+        music={
+          <Suspense fallback={<SectionFallback eyebrow="music" titleWidth="24rem" subtitleWidth="34rem" />}>
+            <MusicSection />
+          </Suspense>
+        }
+        vlogs={
+          <Suspense fallback={<SectionFallback eyebrow="vlogs" titleWidth="26rem" subtitleWidth="30rem" />}>
+            <VlogsSection />
+          </Suspense>
+        }
+      />
     </main>
   );
 }

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+/* hmr-bump */
+
 /* ── Stitch "Tactile Gallery" design system palette ── */
 :root {
   --bg:                 #fffcf7;
@@ -28,43 +30,106 @@ body {
   font-family: var(--font-sans), "Epilogue", system-ui, sans-serif;
 }
 
-/* ── Pastel rectangular overlays (matched to Stitch screenshot) ── */
-body::before {
-  content: "";
-  position: fixed;
-  inset: -8vw;
-  z-index: -1;
-  pointer-events: none;
-  filter: blur(0px);
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-image:
-    /* sage square — upper-left, faint */
-    linear-gradient(rgba(228, 240, 226, 0.55), rgba(228, 240, 226, 0.55)),
-    /* pink rectangle — top right, prominent */
-    linear-gradient(rgba(252, 222, 226, 0.70), rgba(252, 222, 226, 0.70)),
-    /* pink rectangle — mid right, large */
-    linear-gradient(rgba(252, 222, 226, 0.55), rgba(252, 222, 226, 0.55)),
-    /* sage square — center-mid */
-    linear-gradient(rgba(226, 238, 224, 0.50), rgba(226, 238, 224, 0.50)),
-    /* pink rectangle — lower-center, soft */
-    linear-gradient(rgba(252, 222, 226, 0.45), rgba(252, 222, 226, 0.45)),
-    /* sage square — bottom-right corner */
-    linear-gradient(rgba(228, 240, 226, 0.40), rgba(228, 240, 226, 0.40));
-  background-size:
-    35vw 22vh,
-    32vw 28vh,
-    38vw 26vh,
-    28vw 24vh,
-    44vw 22vh,
-    30vw 26vh;
-  background-position:
-    2% 4%,
-    66% 2%,
-    62% 32%,
-    35% 48%,
-    28% 70%,
-    74% 72%;
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
+}
+
+#route-content {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition:
+    opacity 220ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 220ms ease;
+  will-change: opacity, transform, filter;
+}
+
+body.route-transitioning #route-content {
+  opacity: 0;
+  transform: translateY(10px) scale(0.995);
+  filter: blur(6px);
+}
+
+.studio-view-shell {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition:
+    opacity 180ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 180ms ease;
+  will-change: opacity, transform, filter;
+}
+
+.studio-view-shell--exiting {
+  opacity: 0;
+  transform: translateY(8px) scale(0.995);
+  filter: blur(6px);
+}
+
+.studio-view-shell--entering {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.background-squares {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition:
+    opacity 180ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 180ms ease;
+  will-change: opacity, transform, filter;
+}
+
+body.studio-view-exiting .background-squares {
+  opacity: 0.68;
+  transform: translateY(8px) scale(0.992);
+  filter: blur(8px);
+}
+
+body.studio-view-entering .background-squares {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #route-content {
+    transition: none;
+  }
+
+  body.route-transitioning #route-content {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .studio-view-shell {
+    transition: none;
+  }
+
+  .studio-view-shell--exiting,
+  .studio-view-shell--entering {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .background-squares {
+    transition: none;
+  }
+
+  body.studio-view-exiting .background-squares,
+  body.studio-view-entering .background-squares {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }
 
 /* ── Grain texture (5% per design spec) ── */

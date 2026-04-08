@@ -13,7 +13,6 @@ export default function ProjectCard({
   tags,
   status,
   githubUrl,
-  stars,
   year,
 }: Project) {
   const badge = statusStyles[status];
@@ -66,19 +65,8 @@ export default function ProjectCard({
         </div>
       </div>
 
-      {/* Right: stars + link */}
+      {/* Right: link */}
       <div className="flex sm:flex-col items-center sm:items-end gap-4 sm:gap-2 flex-shrink-0">
-        {stars != null && (
-          <span
-            className="text-xs text-[#a09890] flex items-center gap-1"
-            style={{ fontFamily: "var(--font-mono), monospace" }}
-          >
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor">
-              <path d="M6 1l1.39 2.82 3.11.45-2.25 2.19.53 3.09L6 8.09l-2.78 1.46.53-3.09L1.5 4.27l3.11-.45z" />
-            </svg>
-            {stars}
-          </span>
-        )}
         {githubUrl ? (
           <a
             href={githubUrl}

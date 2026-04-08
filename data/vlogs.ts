@@ -1,12 +1,14 @@
 export interface VlogStats {
   ytSubscribers: number;
   totalViews: number;
+  totalDurationSeconds: number;
 }
 
 export interface VlogItem {
   youtubeId: string;
   title: string;
   channel: string;
+  durationSeconds?: number;
 }
 
 export interface VlogChannel {
@@ -32,6 +34,7 @@ const vlogs: VlogData = {
   stats: {
     ytSubscribers: 0,
     totalViews: 0,
+    totalDurationSeconds: 0,
   },
   channels: [
     {

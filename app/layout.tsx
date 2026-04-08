@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Epilogue } from "next/font/google";
+import Script from "next/script";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import RandomBackground from "@/components/RandomBackground";
+import RouteTransitionManager from "@/components/RouteTransitionManager";
 import "./globals.css";
 
 const epilogue = Epilogue({
@@ -21,10 +24,22 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${epilogue.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+      <head>
+        <link rel="dns-prefetch" href="https://www.instagram.com" />
+        <link rel="preconnect" href="https://www.instagram.com" />
+      </head>
+      <body className="min-h-full flex flex-col relative">
+        <RouteTransitionManager />
+        <RandomBackground />
         <Navbar />
-        {children}
+        <div id="route-content" className="flex-1 flex flex-col">
+          {children}
+        </div>
         <Footer />
+        <Script
+          src="https://www.instagram.com/embed.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

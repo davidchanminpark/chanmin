@@ -5,17 +5,17 @@ import { Project } from "@/data/projects";
 
 type Filter = "all" | Project["category"];
 const FILTERS: { value: Filter; label: string }[] = [
-  { value: "all",       label: "all projects" },
-  { value: "frontend",  label: "frontend" },
-  { value: "fullstack", label: "fullstack" },
-  { value: "tools",     label: "tools" },
+  { value: "all",    label: "all projects" },
+  { value: "web",    label: "web" },
+  { value: "mobile", label: "mobile" },
+  { value: "tools",  label: "tools" },
 ];
 
 function FeaturedCard({ p }: { p: Project }) {
   return (
-    <div className="md:col-span-8 group rounded-xl overflow-hidden flex flex-col transition-all duration-500"
+    <div data-square-blocker className="md:col-span-8 group rounded-xl overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-1"
       style={{ background: "var(--surface-low)" }}>
-      <div className="aspect-video w-full flex items-center justify-center p-8 relative"
+      <div className="aspect-video w-full flex items-center justify-center p-8 relative transition-transform duration-500 group-hover:scale-[1.01]"
         style={{ background: "var(--surface-highest)" }}>
         <div className="w-full max-w-md rounded-lg p-5 text-xs leading-relaxed font-mono"
           style={{ background: "rgba(255,252,247,0.55)", color: "var(--on-surface-variant)", backdropFilter: "blur(4px)", border: "1px solid rgba(186,186,176,0.15)" }}>
@@ -46,9 +46,6 @@ function FeaturedCard({ p }: { p: Project }) {
                 style={{ background: "var(--surface-highest)", color: "var(--tertiary)" }}>{t}</span>
             ))}
           </div>
-          {p.stars != null && (
-            <span className="flex items-center gap-1.5 text-xs ml-4" style={{ color: "var(--tertiary)" }}>★ {p.stars}</span>
-          )}
         </div>
       </div>
     </div>
@@ -57,7 +54,7 @@ function FeaturedCard({ p }: { p: Project }) {
 
 function SideCard({ p }: { p: Project }) {
   return (
-    <div className="md:col-span-4 rounded-xl p-8 flex flex-col transition-all duration-300 hover:-translate-y-1"
+    <div data-square-blocker className="group md:col-span-4 rounded-xl p-8 flex flex-col transition-all duration-300 hover:-translate-y-1"
       style={{ background: "var(--surface-highest)" }}>
       <div className="flex items-center justify-between mb-6">
         <span className="text-2xl">⬡</span>
@@ -80,7 +77,7 @@ function SideCard({ p }: { p: Project }) {
 
 function HorizontalCard({ p }: { p: Project }) {
   return (
-    <div className="md:col-span-8 rounded-xl overflow-hidden flex flex-col md:flex-row transition-all duration-300"
+    <div data-square-blocker className="group md:col-span-8 rounded-xl overflow-hidden flex flex-col md:flex-row transition-all duration-300 hover:-translate-y-1"
       style={{ background: "var(--surface-low)" }}>
       <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
         <div className="text-[10px] font-bold tracking-widest uppercase mb-2" style={{ color: "var(--primary)" }}>{p.status}</div>
@@ -92,7 +89,7 @@ function HorizontalCard({ p }: { p: Project }) {
             style={{ background: "var(--primary)", color: "var(--on-primary)" }}>repository</a>
         )}
       </div>
-      <div className="md:w-1/2 flex items-center justify-center p-8" style={{ background: "var(--surface-highest)" }}>
+      <div className="md:w-1/2 flex items-center justify-center p-8 transition-transform duration-500 group-hover:scale-[1.01]" style={{ background: "var(--surface-highest)" }}>
         <div className="w-full rounded-lg p-4 text-[10px] font-mono leading-relaxed"
           style={{ background: "rgba(255,252,247,0.4)", color: "var(--on-surface-variant)", backdropFilter: "blur(4px)" }}>
           {p.tags.map((t, i) => (
@@ -111,9 +108,9 @@ function HorizontalCard({ p }: { p: Project }) {
 
 function SmallCard({ p }: { p: Project }) {
   return (
-    <div className="md:col-span-4 rounded-xl overflow-hidden transition-all duration-300 hover:brightness-[0.97]"
+    <div data-square-blocker className="group md:col-span-4 rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:brightness-[0.97]"
       style={{ background: "var(--surface-low)" }}>
-      <div className="h-36 flex items-center justify-center" style={{ background: "var(--surface-highest)" }}>
+      <div className="h-36 flex items-center justify-center transition-transform duration-500 group-hover:scale-[1.01]" style={{ background: "var(--surface-highest)" }}>
         <span className="text-4xl font-bold lowercase opacity-20" style={{ color: "var(--primary)" }}>
           {p.title.slice(0, 2)}
         </span>
@@ -131,15 +128,18 @@ function SmallCard({ p }: { p: Project }) {
   );
 }
 
-export default function ProjectsList({ projects }: { projects: Project[] }) {
+export default function ProjectsList({
+  projects,
+}: {
+  projects: Project[];
+}) {
   const [active, setActive] = useState<Filter>("all");
   const visible = active === "all" ? projects : projects.filter((p) => p.category === active);
 
   return (
     <div>
-      {/* Filter / stats bar */}
-      <div className="flex flex-wrap items-center gap-8 mb-16 py-8"
-        style={{ borderTop: "1px solid rgba(186,186,176,0.15)", borderBottom: "1px solid rgba(186,186,176,0.15)" }}>
+      {/* Filter bar */}
+      <div data-square-blocker className="flex flex-wrap items-center gap-8 mb-8">
         <div className="flex items-center gap-3">
           <span className="text-sm lowercase" style={{ color: "var(--tertiary)" }}>filter:</span>
           <div className="flex gap-2 flex-wrap">
@@ -152,19 +152,6 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
                 {label}
               </button>
             ))}
-          </div>
-        </div>
-        <div className="ml-auto hidden lg:flex items-center gap-6">
-          <div className="text-right">
-            <span className="block text-xl font-bold lowercase" style={{ color: "var(--on-surface)" }}>{visible.length}</span>
-            <span className="text-[10px] uppercase tracking-widest" style={{ color: "var(--tertiary)" }}>repositories</span>
-          </div>
-          <div className="w-px h-8" style={{ background: "rgba(186,186,176,0.3)" }} />
-          <div className="text-right">
-            <span className="block text-xl font-bold lowercase" style={{ color: "var(--on-surface)" }}>
-              {visible.reduce((s, p) => s + (p.stars ?? 0), 0)}
-            </span>
-            <span className="text-[10px] uppercase tracking-widest" style={{ color: "var(--tertiary)" }}>total_stars</span>
           </div>
         </div>
       </div>
