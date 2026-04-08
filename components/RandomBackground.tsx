@@ -186,13 +186,26 @@ export default function RandomBackground() {
 
   const squaresRef = useRef<Square[] | null>(null);
   const boundHeightRef = useRef(0);
+  // Cache generated square sets keyed by `${paletteKey}:${bucket}` so
+  // crossing a width breakpoint (or returning to a previously-visited
+  // palette) reuses the exact same rectangles instead of regenerating.
+  // A bound shift past BOUND_THRESHOLD_PX invalidates the current entry.
+  const bucketCacheRef = useRef<Map<string, Square[]>>(new Map());
   const hoveredIdRef = useRef<number | null>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [appearingIds, setAppearingIds] = useState<Set<number>>(new Set());
   const popAudioRef = useRef<HTMLAudioElement | null>(null);
   useEffect(() => {
     squaresRef.current = squares;
-  }, [squares]);
+    // Mirror the live square set into the cache for the current
+    // (palette, bucket). This captures pop/replace mutations so that
+    // crossing a breakpoint and coming back preserves popped state.
+    if (squares && typeof window !== "undefined") {
+      const w = window.innerWidth;
+      const bucket = w < 768 ? 0 : w < 1440 ? 1 : w < 1920 ? 2 : 3;
+      bucketCacheRef.current.set(`${paletteKey}:${bucket}`, squares);
+    }
+  }, [squares, paletteKey]);
 
   // Preload the pop sound once. Rewinding a single element keeps rapid
   // clicks cheap and avoids creating stray Audio objects.
@@ -237,48 +250,145 @@ export default function RandomBackground() {
     return () => window.removeEventListener("hashchange", update);
   }, [pathname]);
 
-  // Regenerate on every navigation and on every full page load.
+  // Regenerate on every navigation and on every full page load. On plain
+  // resize, update the wrapper height live but only regenerate when the
+  // viewport crosses a density bucket or the content bound shifts enough
+  // to matter — the squares already reflow for free via vw/vh/% units.
   useEffect(() => {
-    const measure = () => {
+    // Width buckets correspond to the breakpoints used by makeSquare and
+    // generateSquares (768 / 1440 / 1920). Within a bucket, count and size
+    // ranges are identical, so regeneration produces a visually equivalent
+    // layout and is wasted work.
+    const getWidthBucket = (w: number): number => {
+      if (w < 768) return 0;
+      if (w < 1440) return 1;
+      if (w < 1920) return 2;
+      return 3;
+    };
+
+    // Boundary threshold matches the 200px margin makeSquare already uses
+    // for its topMax — smaller shifts don't change what placements are legal.
+    const BOUND_THRESHOLD_PX = 200;
+    const REGEN_DEBOUNCE_MS = 200;
+
+    const readBound = (): number => {
       const footer = document.querySelector("footer");
-      const bound = footer
+      return footer
         ? footer.offsetTop
         : Math.max(
             document.documentElement.scrollHeight,
             document.body.scrollHeight,
             window.innerHeight,
           );
-      boundHeightRef.current = bound;
-      setDocHeight(bound);
-      setSquares(generateSquares(bound, palettes[paletteKey]));
     };
 
-    let frameId = window.requestAnimationFrame(measure);
-    const timeoutId = window.setTimeout(measure, 250);
+    let lastBucket = getWidthBucket(window.innerWidth);
+    let lastBoundAtRegen = 0;
 
+    const cacheKey = (bucket: number) => `${paletteKey}:${bucket}`;
+
+    const updateBounds = () => {
+      const bound = readBound();
+      boundHeightRef.current = bound;
+      setDocHeight(bound);
+      return bound;
+    };
+
+    // Resolve the square set for the current (palette, bucket): return a
+    // cached set if one exists, otherwise generate + cache. `force: true`
+    // bypasses the cache and overwrites it (used when the content bound
+    // drifts past the threshold and cached placements no longer fit).
+    const resolveSquares = (
+      bound: number,
+      { force }: { force: boolean },
+    ): Square[] => {
+      const bucket = getWidthBucket(window.innerWidth);
+      const key = cacheKey(bucket);
+      const cached = bucketCacheRef.current.get(key);
+      if (cached && !force) {
+        lastBucket = bucket;
+        lastBoundAtRegen = bound;
+        return cached;
+      }
+      const fresh = generateSquares(bound, palettes[paletteKey]);
+      bucketCacheRef.current.set(key, fresh);
+      lastBucket = bucket;
+      lastBoundAtRegen = bound;
+      return fresh;
+    };
+
+    const applySquares = (bound: number, opts: { force: boolean }) => {
+      setSquares(resolveSquares(bound, opts));
+    };
+
+    // Initial render for this palette: prefer cache (so returning to a
+    // palette shows the same rectangles), fall back to generating.
+    const initialBound = updateBounds();
+    applySquares(initialBound, { force: false });
+
+    let boundsRaf = 0;
+    let regenTimeout: number | null = null;
+
+    const scheduleMaybeRegen = () => {
+      if (regenTimeout !== null) {
+        window.clearTimeout(regenTimeout);
+      }
+      regenTimeout = window.setTimeout(() => {
+        regenTimeout = null;
+        const bound = boundHeightRef.current;
+        const bucketChanged = getWidthBucket(window.innerWidth) !== lastBucket;
+        const boundChanged =
+          Math.abs(bound - lastBoundAtRegen) > BOUND_THRESHOLD_PX;
+        if (bucketChanged) {
+          // Pull from cache if we've visited this bucket before, otherwise
+          // generate once and store it. Subsequent crossings are free.
+          applySquares(bound, { force: false });
+        } else if (boundChanged) {
+          // Content height moved enough that cached placements for this
+          // bucket may no longer fit — invalidate and regenerate.
+          applySquares(bound, { force: true });
+        }
+      }, REGEN_DEBOUNCE_MS);
+    };
+
+    const onResize = () => {
+      if (boundsRaf) window.cancelAnimationFrame(boundsRaf);
+      boundsRaf = window.requestAnimationFrame(() => {
+        updateBounds();
+        scheduleMaybeRegen();
+      });
+    };
+
+    const settleTimeoutId = window.setTimeout(() => {
+      const bound = updateBounds();
+      // If late-streaming content shifted the bound past the threshold,
+      // invalidate this bucket's cache and regenerate so placements fit.
+      if (Math.abs(bound - lastBoundAtRegen) > BOUND_THRESHOLD_PX) {
+        applySquares(bound, { force: true });
+      }
+    }, 250);
+
+    // Footer observer is the meaningful signal for "content bound changed"
+    // (e.g. async sections streaming in). The previous document.body
+    // observer was dropped because the background layer's own height feeds
+    // body size, which risks a feedback loop.
     const footer = document.querySelector("footer");
     const resizeObserver =
       typeof ResizeObserver !== "undefined"
-        ? new ResizeObserver(() => {
-            window.cancelAnimationFrame(frameId);
-            frameId = window.requestAnimationFrame(measure);
-          })
+        ? new ResizeObserver(onResize)
         : null;
 
     if (footer && resizeObserver) {
       resizeObserver.observe(footer);
     }
 
-    if (document.body && resizeObserver) {
-      resizeObserver.observe(document.body);
-    }
-
-    window.addEventListener("resize", measure);
+    window.addEventListener("resize", onResize);
 
     return () => {
-      window.cancelAnimationFrame(frameId);
-      window.clearTimeout(timeoutId);
-      window.removeEventListener("resize", measure);
+      if (boundsRaf) window.cancelAnimationFrame(boundsRaf);
+      window.clearTimeout(settleTimeoutId);
+      if (regenTimeout !== null) window.clearTimeout(regenTimeout);
+      window.removeEventListener("resize", onResize);
       resizeObserver?.disconnect();
     };
   }, [pathname, paletteKey]);
