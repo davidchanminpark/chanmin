@@ -4,7 +4,6 @@ import Script from "next/script";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RandomBackground from "@/components/RandomBackground";
-import RouteTransitionManager from "@/components/RouteTransitionManager";
 import "./globals.css";
 
 const epilogue = Epilogue({
@@ -29,7 +28,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://www.instagram.com" />
       </head>
       <body className="min-h-full flex flex-col relative">
-        <RouteTransitionManager />
         <RandomBackground />
         <Navbar />
         <div id="route-content" className="flex-1 flex flex-col">

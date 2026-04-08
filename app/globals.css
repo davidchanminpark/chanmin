@@ -35,23 +35,6 @@ html {
   scroll-padding-top: 7rem;
 }
 
-#route-content {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
-  transition:
-    opacity 220ms ease,
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 220ms ease;
-  will-change: opacity, transform, filter;
-}
-
-body.route-transitioning #route-content {
-  opacity: 0;
-  transform: translateY(10px) scale(0.995);
-  filter: blur(6px);
-}
-
 .studio-view-shell {
   opacity: 1;
   transform: translateY(0) scale(1);
@@ -110,16 +93,6 @@ body.studio-view-entering .background-squares {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #route-content {
-    transition: none;
-  }
-
-  body.route-transitioning #route-content {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-
   .studio-view-shell {
     transition: none;
   }
