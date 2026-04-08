@@ -1,5 +1,6 @@
 import { MusicItem } from "@/data/music";
 import { formatDurationClock } from "@/lib/duration";
+import YouTubePlayer from "@/components/YouTubePlayer";
 
 export default function MediaCard({
   type,
@@ -22,16 +23,13 @@ export default function MediaCard({
         }}
       >
         <div
-          className="rounded-xl overflow-hidden"
-          style={{ background: "var(--surface-highest)" }}
+          className="relative rounded-xl overflow-hidden"
+          style={{ aspectRatio: "16/9", background: "var(--surface-highest)" }}
         >
-          <iframe
-            src={`https://www.youtube.com/embed/${embedId}`}
+          <YouTubePlayer
+            videoId={embedId}
             title={title}
-            width="493"
-            height="277"
-            allowFullScreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            sizes="(max-width: 768px) 93vw, 30.8rem"
           />
         </div>
         <div className="flex items-center justify-between gap-2 px-1">
