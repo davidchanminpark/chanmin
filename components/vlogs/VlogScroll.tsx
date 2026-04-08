@@ -17,7 +17,11 @@ export default function VlogScroll({ items }: { items: VlogItem[] }) {
       {items.map((item, index) => (
         <div
           key={item.youtubeId}
-          className={index === 0 ? "sm:col-span-2" : undefined}
+          className={
+            index === 0
+              ? "sm:col-span-2 sm:px-5 lg:px-20"
+              : undefined
+          }
         >
           <VlogCard {...item} featured={index === 0} />
         </div>

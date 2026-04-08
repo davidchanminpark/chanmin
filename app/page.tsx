@@ -54,7 +54,7 @@ export default async function Home() {
   ];
 
   const homeView = (
-    <>
+    <div className="home-title-scale">
       {/* ── Hero ── */}
       <section className="relative max-w-7xl mx-auto px-8 mb-20">
         <p className="text-sm lowercase tracking-widest mb-6" style={{ color: "var(--outline)" }}>
@@ -180,7 +180,7 @@ export default async function Home() {
         </div>
       </section>
 
-    </>
+    </div>
   );
 
   return (

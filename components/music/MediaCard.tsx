@@ -15,7 +15,7 @@ export default function MediaCard({
     return (
       <div
         data-square-blocker
-        className="group flex-shrink-0 w-[28rem] max-w-[85vw] rounded-2xl p-3 md:p-4 flex flex-col gap-3 transition-transform duration-300 hover:-translate-y-1"
+        className="group flex-shrink-0 w-[30.8rem] max-w-[93vw] rounded-2xl p-3 md:p-4 flex flex-col gap-3 transition-transform duration-300 hover:-translate-y-1"
         style={{
           background: "var(--surface-low)",
           border: "1px solid var(--outline-variant)",
@@ -28,8 +28,8 @@ export default function MediaCard({
           <iframe
             src={`https://www.youtube.com/embed/${embedId}`}
             title={title}
-            width="448"
-            height="252"
+            width="493"
+            height="277"
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
@@ -59,7 +59,7 @@ export default function MediaCard({
     return (
       <div
         data-square-blocker
-        className="group flex-shrink-0 w-72 flex flex-col rounded-xl overflow-hidden transition-transform duration-300 hover:-translate-y-1"
+        className="group flex-shrink-0 w-[19.8rem] flex flex-col rounded-xl overflow-hidden transition-transform duration-300 hover:-translate-y-1"
         style={{
           background: "var(--surface-low)",
           border: "1px solid var(--outline-variant)",
@@ -68,8 +68,8 @@ export default function MediaCard({
         <iframe
           src={`https://open.spotify.com/embed/track/${embedId}`}
           title={title}
-          width="288"
-          height="152"
+          width="317"
+          height="167"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
         />
@@ -101,7 +101,7 @@ export default function MediaCard({
     return (
       <div
         data-square-blocker
-        className="group flex-shrink-0 w-64 rounded-2xl p-3 md:p-4 flex flex-col gap-2 transition-transform duration-300 hover:-translate-y-1"
+        className="group flex-shrink-0 w-[17.6rem] rounded-2xl p-3 md:p-4 flex flex-col gap-2 transition-transform duration-300 hover:-translate-y-1"
         style={{
           background: "var(--surface-low)",
           border: "1px solid var(--outline-variant)",
@@ -110,13 +110,13 @@ export default function MediaCard({
         <div
           style={{
             position: "relative",
-            height: "400px",
+            height: "440px",
             overflow: "hidden",
             borderRadius: "12px",
           }}
         >
           <div
-            style={{ position: "absolute", top: "-60px", left: "-50px", right: "0px", transform: "scale(1.01)", transformOrigin: "center center" }}
+            style={{ position: "absolute", top: "-30px", left: "-40px", right: "0px", transform: "scale(1.1)", transformOrigin: "center center" }}
           >
             <blockquote
               className="instagram-media"
