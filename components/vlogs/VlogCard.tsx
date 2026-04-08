@@ -1,6 +1,7 @@
 import { VlogItem } from "@/data/vlogs";
 import { formatDurationClock } from "@/lib/duration";
 import YouTubePlayer from "@/components/YouTubePlayer";
+import MediaFrame from "@/components/MediaFrame";
 
 export default function VlogCard({
   youtubeId,
@@ -11,17 +12,7 @@ export default function VlogCard({
   const durationLabel = formatDurationClock(durationSeconds);
 
   return (
-    <article
-      data-square-blocker
-      className="group rounded-2xl p-3 md:p-4 transition-transform duration-300 hover:-translate-y-1"
-      style={{
-        background: featured ? "var(--surface-high)" : "var(--surface-low)",
-        border: featured
-          ? "1px solid var(--primary)"
-          : "1px solid var(--outline-variant)",
-        boxShadow: featured ? "0 10px 30px rgba(0,0,0,0.08)" : "none",
-      }}
-    >
+    <MediaFrame as="article" featured={featured} className="rounded-2xl p-3 md:p-4">
       <div
         className="relative w-full overflow-hidden rounded-xl"
         style={{ aspectRatio: "16/9", background: "var(--surface-highest)" }}
@@ -56,6 +47,6 @@ export default function VlogCard({
           </span>
         )}
       </div>
-    </article>
+    </MediaFrame>
   );
 }

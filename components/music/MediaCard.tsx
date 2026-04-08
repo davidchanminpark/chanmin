@@ -1,6 +1,7 @@
 import { MusicItem } from "@/data/music";
 import { formatDurationClock } from "@/lib/duration";
 import YouTubePlayer from "@/components/YouTubePlayer";
+import MediaFrame from "@/components/MediaFrame";
 
 export default function MediaCard({
   type,
@@ -14,14 +15,7 @@ export default function MediaCard({
 
   if (type === "youtube") {
     return (
-      <div
-        data-square-blocker
-        className="group flex-shrink-0 w-[30.8rem] max-w-[93vw] rounded-2xl p-3 md:p-4 flex flex-col gap-3 transition-transform duration-300 hover:-translate-y-1"
-        style={{
-          background: "var(--surface-low)",
-          border: "1px solid var(--outline-variant)",
-        }}
-      >
+      <MediaFrame className="flex-shrink-0 w-[30.8rem] max-w-[93vw] rounded-2xl p-3 md:p-4 flex flex-col gap-3">
         <div
           className="relative rounded-xl overflow-hidden"
           style={{ aspectRatio: "16/9", background: "var(--surface-highest)" }}
@@ -49,20 +43,13 @@ export default function MediaCard({
             </span>
           )}
         </div>
-      </div>
+      </MediaFrame>
     );
   }
 
   if (type === "spotify") {
     return (
-      <div
-        data-square-blocker
-        className="group flex-shrink-0 w-[19.8rem] flex flex-col rounded-xl overflow-hidden transition-transform duration-300 hover:-translate-y-1"
-        style={{
-          background: "var(--surface-low)",
-          border: "1px solid var(--outline-variant)",
-        }}
-      >
+      <MediaFrame className="flex-shrink-0 w-[19.8rem] flex flex-col rounded-xl overflow-hidden">
         <iframe
           src={`https://open.spotify.com/embed/track/${embedId}`}
           title={title}
@@ -87,7 +74,7 @@ export default function MediaCard({
             ))}
           </div>
         )}
-      </div>
+      </MediaFrame>
     );
   }
 
@@ -97,14 +84,7 @@ export default function MediaCard({
         ? `https://www.instagram.com/reel/${embedId}/`
         : `https://www.instagram.com/p/${embedId}/`;
     return (
-      <div
-        data-square-blocker
-        className="group flex-shrink-0 w-[17.6rem] rounded-2xl p-3 md:p-4 flex flex-col gap-2 transition-transform duration-300 hover:-translate-y-1"
-        style={{
-          background: "var(--surface-low)",
-          border: "1px solid var(--outline-variant)",
-        }}
-      >
+      <MediaFrame className="flex-shrink-0 w-[17.6rem] rounded-2xl p-3 md:p-4 flex flex-col gap-2">
         <div
           style={{
             position: "relative",
@@ -140,7 +120,7 @@ export default function MediaCard({
             </span>
           )}
         </div>
-      </div>
+      </MediaFrame>
     );
   }
 
