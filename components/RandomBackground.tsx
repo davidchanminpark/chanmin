@@ -15,8 +15,20 @@ type Square = {
   popping?: boolean;
 };
 
-// rgb tuples — sage and pink, matched to the original pastel palette
-const palette = ["228, 240, 226", "252, 222, 226"];
+type PaletteKey = "home" | "code" | "music" | "vlogs";
+
+// rgb tuples — lightweight pastels that stay behind content.
+// Keep these as "r, g, b" strings so we can reuse the existing rgba logic.
+const palettes: Record<PaletteKey, [string, string]> = {
+  // Default landing: warm beiges (soft, minimal)
+  home: ["240, 226, 210", "245, 236, 224"],
+  // Code: greens (fresh, still subtle)
+  code: ["224, 246, 233", "206, 234, 216"],
+  // Music: light blue + light grey
+  music: ["229, 240, 255", "226, 230, 236"],
+  // Vlogs: light pink + very light pink
+  vlogs: ["252, 222, 226", "255, 238, 241"],
+};
 
 let nextSquareId = 0;
 
@@ -56,6 +68,7 @@ function isNested(
 
 function makeSquare(
   boundHeight: number,
+  palette: [string, string],
   topMin = 0,
   topMax = Math.max(0, boundHeight - 200),
 ): Square {
@@ -107,20 +120,21 @@ function placeNonNested(
   existing: Square[],
   vw: number,
   vh: number,
+  palette: [string, string],
   topMin?: number,
   topMax?: number,
 ): Square {
   const maxAttempts = 12;
-  let candidate = makeSquare(boundHeight, topMin, topMax);
+  let candidate = makeSquare(boundHeight, palette, topMin, topMax);
   let attempts = 0;
   while (isNested(candidate, existing, vw, vh) && attempts < maxAttempts) {
-    candidate = makeSquare(boundHeight, topMin, topMax);
+    candidate = makeSquare(boundHeight, palette, topMin, topMax);
     attempts++;
   }
   return candidate;
 }
 
-function generateSquares(boundHeight: number): Square[] {
+function generateSquares(boundHeight: number, palette: [string, string]): Square[] {
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
   // ~1 square per 20vh of available area, clamped to 16–40
@@ -137,7 +151,7 @@ function generateSquares(boundHeight: number): Square[] {
   const vh = window.innerHeight;
   const squares: Square[] = [];
   for (let i = 0; i < count; i++) {
-    squares.push(placeNonNested(boundHeight, squares, vw, vh));
+    squares.push(placeNonNested(boundHeight, squares, vw, vh, palette));
   }
   return squares;
 }
@@ -166,6 +180,7 @@ function isSquareBlockedAtPoint(clientX: number, clientY: number): boolean {
 
 export default function RandomBackground() {
   const pathname = usePathname();
+  const [paletteKey, setPaletteKey] = useState<PaletteKey>("home");
   const [squares, setSquares] = useState<Square[] | null>(null);
   const [docHeight, setDocHeight] = useState(0);
 
@@ -199,6 +214,29 @@ export default function RandomBackground() {
     }
   };
 
+  // Choose palette per page/section.
+  // - On `/`, the site uses hash navigation (#code/#music/#vlogs) inside one page.
+  // - On `/code` `/music` `/vlogs`, use pathname directly.
+  useEffect(() => {
+    const computeKey = (): PaletteKey => {
+      const cleanPath = (pathname || "/").split("?")[0];
+      if (cleanPath === "/code" || cleanPath === "/coding") return "code";
+      if (cleanPath === "/music") return "music";
+      if (cleanPath === "/vlogs") return "vlogs";
+
+      const hash = window.location.hash || "";
+      if (hash === "#code") return "code";
+      if (hash === "#music") return "music";
+      if (hash === "#vlogs") return "vlogs";
+      return "home";
+    };
+
+    const update = () => setPaletteKey(computeKey());
+    update();
+    window.addEventListener("hashchange", update);
+    return () => window.removeEventListener("hashchange", update);
+  }, [pathname]);
+
   // Regenerate on every navigation and on every full page load.
   useEffect(() => {
     const measure = () => {
@@ -212,7 +250,7 @@ export default function RandomBackground() {
           );
       boundHeightRef.current = bound;
       setDocHeight(bound);
-      setSquares(generateSquares(bound));
+      setSquares(generateSquares(bound, palettes[paletteKey]));
     };
 
     let frameId = window.requestAnimationFrame(measure);
@@ -243,7 +281,7 @@ export default function RandomBackground() {
       window.removeEventListener("resize", measure);
       resizeObserver?.disconnect();
     };
-  }, [pathname]);
+  }, [pathname, paletteKey]);
 
   // Document-level click listener — hit-tests against square rects in doc
   // coordinates so the squares only pop when exposed background is the
@@ -350,7 +388,15 @@ export default function RandomBackground() {
         scrollY + vh - 200,
       );
 
-      const replacement = placeNonNested(bound, remaining, vw, vh, topMin, topMax);
+      const replacement = placeNonNested(
+        bound,
+        remaining,
+        vw,
+        vh,
+        palettes[paletteKey],
+        topMin,
+        topMax,
+      );
       // Mark the new square as "appearing" so it zooms in from a small
       // scale on its next paint.
       setAppearingIds(prev => {

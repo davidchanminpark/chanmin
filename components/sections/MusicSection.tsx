@@ -205,6 +205,7 @@ export default async function MusicSection() {
             </h3>
             <span className="text-xs" style={{ color: "var(--on-surface-variant)" }}>
               {spotifyItems.length} track{spotifyItems.length !== 1 ? "s" : ""} ·{" "}
+              {/* streams intentionally omitted */}
               {spotifyDuration > 0 ? ` · ${formatTotalDuration(spotifyDuration)}` : ""}
             </span>
           </div>

@@ -29,21 +29,27 @@ export default async function Home() {
   const sections = [
     {
       num: "01", href: "/#code", label: "code",
-      description: "Apps for productivity, community building, and creative work automation",
+      description: "Apps for productivity, community building, and creative work",
       meta: codingMeta,
-      bg: "var(--surface-highest)",
+      // Match code page rectangle palette (greens)
+      bg: "color-mix(in oklab, rgb(224 246 233) 72%, var(--surface-highest) 28%)",
+      accent: "color-mix(in oklab, rgb(206 234 216) 72%, var(--primary) 28%)",
     },
     {
       num: "02", href: "/#music", label: "music",
       description: "Original songs, covers, and live sessions. Edited on Logic Pro X",
       meta: "Spotify · YouTube · Instagram",
-      bg: "var(--primary-container)",
+      // Match music page rectangle palette (light blue + light grey)
+      bg: "color-mix(in oklab, rgb(229 240 255) 70%, var(--surface-highest) 30%)",
+      accent: "color-mix(in oklab, rgb(226 230 236) 70%, var(--tertiary) 30%)",
     },
     {
       num: "03", href: "/#vlogs", label: "vlogs",
       description: "Retreat episodes and highlights. Edited on Final Cut Pro",
       meta: "5 stories and counting",
-      bg: "var(--surface-high)",
+      // Match vlogs page rectangle palette (light pink + very light pink)
+      bg: "color-mix(in oklab, rgb(252 222 226) 70%, var(--surface-highest) 30%)",
+      accent: "color-mix(in oklab, rgb(255 238 241) 72%, var(--primary) 28%)",
     },
   ];
 
@@ -123,12 +129,25 @@ export default async function Home() {
             <StudioLink key={s.href} href={s.href} className="group block">
               <div
                 className="rounded-xl p-7 h-full flex flex-col justify-between transition-all duration-300 group-hover:-translate-y-1"
-                style={{ background: s.bg }}
+                style={{
+                  background: s.bg,
+                  border: "1px solid var(--outline-variant)",
+                  boxShadow: "0 1px 0 rgba(0,0,0,0.02)",
+                }}
               >
                 <div>
                   <div className="flex items-start justify-between mb-6">
                     <span className="text-xs" style={{ color: "var(--outline)", fontFamily: "monospace" }}>{s.num}</span>
-                    <span className="text-xs font-bold uppercase tracking-widest opacity-50" style={{ color: "var(--on-surface)" }}>{s.label}</span>
+                    <span className="flex items-center gap-2">
+                      <span
+                        aria-hidden
+                        className="inline-block w-2.5 h-2.5 rounded-sm"
+                        style={{ background: s.accent }}
+                      />
+                      <span className="text-xs font-bold uppercase tracking-widest opacity-60" style={{ color: "var(--on-surface)" }}>
+                        {s.label}
+                      </span>
+                    </span>
                   </div>
                   <h3 className="text-2xl font-bold lowercase mb-3 leading-tight" style={{ color: "var(--on-surface)" }}>{s.label}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: "var(--on-surface-variant)" }}>{s.description}</p>
