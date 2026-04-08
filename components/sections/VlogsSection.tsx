@@ -24,7 +24,7 @@ export default async function VlogsSection() {
           vlogs &amp; <br />memories
         </>
       }
-      description="a collection of retreat episodes as a youth group teacher. edited on final cut pro."
+      description="a collection of retreat episodes for youth group. edited on final cut pro."
     >
       <div
         className="flex flex-wrap gap-x-10 gap-y-4 py-6 mb-16"
@@ -54,7 +54,7 @@ export default async function VlogsSection() {
             {totalDurationLabel}
           </span>
           <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
-            total duration
+            total content time
           </span>
         </div>
         <div className="flex flex-col gap-1">

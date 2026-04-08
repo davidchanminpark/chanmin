@@ -19,7 +19,7 @@ export default async function CodeSection() {
       eyebrow="code"
       title={
         <>
-          code &amp; <br />repository
+          code &amp; <br />repositories
         </>
       }
       description="full-stack engineer with a passion for building tools for personal growth and productivity; experience building database systems"

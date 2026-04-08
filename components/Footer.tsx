@@ -14,7 +14,7 @@ export default function Footer() {
     >
       <div className="max-w-7xl mx-auto px-8 py-14 flex flex-col md:flex-row items-center justify-between gap-6">
         <span className="text-lg font-bold lowercase tracking-tight" style={{ color: "var(--on-surface)" }}>
-          chanmin
+          chanmin's studio
         </span>
         <div className="flex gap-8">
           {links.map(({ label, href }) => (

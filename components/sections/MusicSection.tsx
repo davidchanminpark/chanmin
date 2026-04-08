@@ -54,7 +54,7 @@ export default async function MusicSection() {
       eyebrow="music"
       title={
         <>
-          music &amp; <br />archive
+          music &amp; <br />melodies
         </>
       }
       description="a catalog of songs i've written / produced. edited on logic pro x."
