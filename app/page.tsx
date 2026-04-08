@@ -56,29 +56,42 @@ export default async function Home() {
   const homeView = (
     <>
       {/* ── Hero ── */}
-      <section className="max-w-7xl mx-auto px-8 mb-20">
+      <section className="relative max-w-7xl mx-auto px-8 mb-20">
         <p className="text-sm lowercase tracking-widest mb-6" style={{ color: "var(--outline)" }}>
           pops : <PopCount />
         </p>
 
-        <h1
-          className="text-6xl sm:text-7xl md:text-8xl font-bold lowercase leading-[0.9] tracking-tighter mb-8"
-          style={{ color: "var(--on-surface)" }}
-        >
-          /cr
-          <span style={{ color: "var(--outline)", opacity: 0.75 }}>eate</span>
-          <br />
-          compose
-          <br />
-          <span className="relative inline-block">
-          <span style={{ color: "var(--outline)", opacity: 0.75 }}>&amp;</span> capture
-            <span
-              className="absolute -bottom-1 left-0 w-full h-3 -z-10"
-              style={{ background: "var(--primary-container)" }}
-            />
-          </span>
-          .
-        </h1>
+        <div className="relative mb-8">
+          <h1
+            className="relative z-10 text-6xl sm:text-7xl md:text-8xl font-bold lowercase leading-[0.9] tracking-tighter"
+            style={{ color: "var(--on-surface)" }}
+          >
+            /cr
+            <span style={{ color: "var(--outline)", opacity: 0.75 }}>eate</span>
+            <br />
+            compose
+            <br />
+            <span className="relative inline-block">
+            <span style={{ color: "var(--outline)", opacity: 0.75 }}>&amp;</span> capture
+              <span
+                className="absolute -bottom-1 left-0 w-full h-3 -z-10"
+                style={{ background: "var(--primary-container)" }}
+              />
+            </span>
+            .
+          </h1>
+
+          {/* Inscribed signature — anchored right; overlaps h1 on narrow windows */}
+          <Image
+            src="/signature-v2.png"
+            alt=""
+            aria-hidden
+            width={785}
+            height={278}
+            className="pointer-events-none select-none hidden min-[1000px]:block absolute right-20 top-1/2 -translate-y-1/2 text-6xl sm:text-7xl md:text-8xl h-auto rotate-[-2deg] opacity-70"
+            style={{ width: "6.7em", filter: "invert(0.65)" }}
+          />
+        </div>
 
         <p className="text-xl mb-10 max-w-lg leading-relaxed" style={{ color: "var(--on-surface-variant)" }}>
           a portfolio of things i make
@@ -166,6 +179,7 @@ export default async function Home() {
           ))}
         </div>
       </section>
+
     </>
   );
 
