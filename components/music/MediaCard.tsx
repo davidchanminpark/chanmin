@@ -94,7 +94,7 @@ export default function MediaCard({
           }}
         >
           <div
-            style={{ position: "absolute", top: "-30px", left: "-40px", right: "0px", transform: "scale(1.1)", transformOrigin: "center center" }}
+            style={{ position: "absolute", top: "-30px", left: "-37px", right: "0px", transform: "scale(1.15)", transformOrigin: "center center" }}
           >
             <blockquote
               className="instagram-media"
