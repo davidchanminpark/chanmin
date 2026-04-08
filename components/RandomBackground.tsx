@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 import { incrementPopCount } from "@/lib/popCount";
 
 type Square = {
@@ -179,7 +178,6 @@ function isSquareBlockedAtPoint(clientX: number, clientY: number): boolean {
 }
 
 export default function RandomBackground() {
-  const pathname = usePathname();
   const [paletteKey, setPaletteKey] = useState<PaletteKey>("home");
   const [squares, setSquares] = useState<Square[] | null>(null);
   const [docHeight, setDocHeight] = useState(0);
@@ -227,16 +225,10 @@ export default function RandomBackground() {
     }
   };
 
-  // Choose palette per page/section.
-  // - On `/`, the site uses hash navigation (#code/#music/#vlogs) inside one page.
-  // - On `/code` `/music` `/vlogs`, use pathname directly.
+  // Choose palette from the hash. The site lives entirely at `/` and uses
+  // hash navigation (#code / #music / #vlogs) to switch views.
   useEffect(() => {
     const computeKey = (): PaletteKey => {
-      const cleanPath = (pathname || "/").split("?")[0];
-      if (cleanPath === "/code" || cleanPath === "/coding") return "code";
-      if (cleanPath === "/music") return "music";
-      if (cleanPath === "/vlogs") return "vlogs";
-
       const hash = window.location.hash || "";
       if (hash === "#code") return "code";
       if (hash === "#music") return "music";
@@ -248,7 +240,7 @@ export default function RandomBackground() {
     update();
     window.addEventListener("hashchange", update);
     return () => window.removeEventListener("hashchange", update);
-  }, [pathname]);
+  }, []);
 
   // Regenerate on every navigation and on every full page load. On plain
   // resize, update the wrapper height live but only regenerate when the
@@ -391,7 +383,7 @@ export default function RandomBackground() {
       window.removeEventListener("resize", onResize);
       resizeObserver?.disconnect();
     };
-  }, [pathname, paletteKey]);
+  }, [paletteKey]);
 
   // Document-level click listener — hit-tests against square rects in doc
   // coordinates so the squares only pop when exposed background is the
