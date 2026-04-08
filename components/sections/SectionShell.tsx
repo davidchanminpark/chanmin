@@ -1,17 +1,29 @@
 import type { ReactNode } from "react";
 import PopCount from "@/components/PopCount";
 
+export type SectionStat = {
+  value: ReactNode;
+  label: string;
+};
+
 export default function SectionShell({
   id,
-  eyebrow,
+  eyebrow = id,
   title,
   description,
+  beforeStats,
+  stats,
   children,
 }: {
   id: string;
-  eyebrow?: string;
+  /** Defaults to `id`. Pass `null` to hide. */
+  eyebrow?: string | null;
   title: ReactNode;
   description?: ReactNode;
+  /** Optional content rendered between the header and the stats bar. */
+  beforeStats?: ReactNode;
+  /** When provided, renders the bordered stats bar above `children`. */
+  stats?: SectionStat[];
   children: ReactNode;
 }) {
   return (
@@ -26,7 +38,7 @@ export default function SectionShell({
       <div
         style={{ borderTop: "1px solid var(--outline-variant)" }}
       >
-        {eyebrow && (
+        {eyebrow != null && eyebrow !== "" && (
           <p
             className="text-xs uppercase tracking-widest mb-6"
             style={{ color: "var(--outline)" }}
@@ -51,6 +63,32 @@ export default function SectionShell({
             </p>
           )}
         </header>
+
+        {beforeStats}
+
+        {stats && stats.length > 0 && (
+          <div
+            className="flex flex-wrap gap-x-10 gap-y-4 py-6 mb-16"
+            style={{
+              borderTop: "1px solid var(--outline-variant)",
+              borderBottom: "1px solid var(--outline-variant)",
+            }}
+          >
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col gap-1">
+                <span className="text-2xl font-bold" style={{ color: "var(--primary)" }}>
+                  {stat.value}
+                </span>
+                <span
+                  className="text-xs uppercase tracking-widest"
+                  style={{ color: "var(--on-surface-variant)" }}
+                >
+                  {stat.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
 
         {children}
       </div>

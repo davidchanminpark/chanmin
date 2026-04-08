@@ -51,65 +51,21 @@ export default async function MusicSection() {
   return (
     <SectionShell
       id="music"
-      eyebrow="music"
       title={
         <>
           music &amp; <br />melodies
         </>
       }
       description="a catalog of songs i've written / produced. edited on logic pro x."
+      beforeStats={<InstagramEmbeds />}
+      stats={[
+        { value: totalViews.toLocaleString(), label: "total views" },
+        { value: totalFollowers.toLocaleString(), label: "total followers" },
+        { value: totalContentDurationLabel, label: "total content time" },
+        { value: originalSongs.toLocaleString(), label: "originals" },
+        { value: totalCovers.toLocaleString(), label: "covers" },
+      ]}
     >
-      <InstagramEmbeds />
-
-      <div
-        className="flex flex-wrap gap-x-10 gap-y-4 py-6 mb-16"
-        style={{
-          borderTop: "1px solid var(--outline-variant)",
-          borderBottom: "1px solid var(--outline-variant)",
-        }}
-      >
-        <div className="flex flex-col gap-1">
-          <span className="text-2xl font-bold" style={{ color: "var(--primary)" }}>
-            {totalViews.toLocaleString()}
-          </span>
-          <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
-            total views
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-2xl font-bold" style={{ color: "var(--primary)" }}>
-            {totalFollowers.toLocaleString()}
-          </span>
-          <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
-            total followers
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-2xl font-bold" style={{ color: "var(--primary)" }}>
-            {totalContentDurationLabel}
-          </span>
-          <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
-            total content time
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-2xl font-bold" style={{ color: "var(--primary)" }}>
-            {originalSongs.toLocaleString()}
-          </span>
-          <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
-            originals
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-2xl font-bold" style={{ color: "var(--primary)" }}>
-            {totalCovers.toLocaleString()}
-          </span>
-          <span className="text-xs uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
-            covers
-          </span>
-        </div>
-      </div>
-
       {igGroups.map((group, index) => {
         const items = allItems
           .filter(
