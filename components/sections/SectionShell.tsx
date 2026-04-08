@@ -29,7 +29,7 @@ export default function SectionShell({
   return (
     <section
       id={id}
-      className="max-w-7xl mx-auto px-8 pb-8 scroll-mt-28"
+      className="max-w-7xl mx-auto px-4 md:px-8 pb-8 scroll-mt-28"
     >
       <p className="text-sm lowercase tracking-widest mb-6" style={{ color: "var(--outline)" }}>
         pops : <PopCount />

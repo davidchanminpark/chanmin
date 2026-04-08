@@ -15,7 +15,7 @@ export default function MediaCard({
 
   if (type === "youtube") {
     return (
-      <MediaFrame className="flex-shrink-0 w-[30.8rem] max-w-[93vw] rounded-2xl p-3 md:p-4 flex flex-col gap-3">
+      <MediaFrame className="flex-shrink-0 w-74 sm:w-[30.8rem] rounded-2xl p-3 md:p-4 flex flex-col gap-3">
         <div
           className="relative rounded-xl overflow-hidden"
           style={{ aspectRatio: "16/9", background: "var(--surface-highest)" }}
@@ -23,7 +23,7 @@ export default function MediaCard({
           <YouTubePlayer
             videoId={embedId}
             title={title}
-            sizes="(max-width: 768px) 93vw, 30.8rem"
+            sizes="(max-width: 640px) 18rem, 30.8rem"
           />
         </div>
         <div className="flex items-center justify-between gap-2 px-1">
@@ -49,11 +49,11 @@ export default function MediaCard({
 
   if (type === "spotify") {
     return (
-      <MediaFrame className="flex-shrink-0 w-[19.8rem] flex flex-col rounded-xl overflow-hidden">
+      <MediaFrame className="flex-shrink-0 w-74 sm:w-[19.8rem] flex flex-col rounded-2xl overflow-hidden">
         <iframe
           src={`https://open.spotify.com/embed/track/${embedId}`}
           title={title}
-          width="317"
+          className="w-full"
           height="167"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"

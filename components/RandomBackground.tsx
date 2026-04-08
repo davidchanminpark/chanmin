@@ -532,7 +532,7 @@ export default function RandomBackground() {
   return (
     <div
       aria-hidden
-      className="background-squares pointer-events-none absolute left-0 top-0 w-full -z-10 overflow-hidden"
+      className="background-squares pointer-events-none absolute top-0 left-4 right-4 md:left-0 md:right-0 -z-10 overflow-hidden"
       style={{ height: docHeight }}
     >
       {squares.map(s => {
