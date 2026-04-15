@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RandomBackground from "@/components/RandomBackground";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 const epilogue = Epilogue({
   variable: "--font-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
           src="https://www.instagram.com/embed.js"
           strategy="afterInteractive"
         />
+        <Analytics />
       </body>
     </html>
   );
