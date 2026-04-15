@@ -360,11 +360,14 @@ export default function RandomBackground() {
       }
     }, 250);
 
-    // Footer observer is the meaningful signal for "content bound changed"
-    // (e.g. async sections streaming in). The previous document.body
-    // observer was dropped because the background layer's own height feeds
-    // body size, which risks a feedback loop.
+    // Footer observer catches async sections streaming in.
+    // Route-content observer catches in-page filter/tab changes (e.g.
+    // web/mobile/tools tabs in the coding view) that shift the footer's
+    // position without changing its own size. Observing #route-content
+    // rather than body avoids the feedback loop: the background div is
+    // absolutely positioned so it doesn't affect route-content's height.
     const footer = document.querySelector("footer");
+    const routeContent = document.querySelector("#route-content");
     const resizeObserver =
       typeof ResizeObserver !== "undefined"
         ? new ResizeObserver(onResize)
@@ -372,6 +375,9 @@ export default function RandomBackground() {
 
     if (footer && resizeObserver) {
       resizeObserver.observe(footer);
+    }
+    if (routeContent && resizeObserver) {
+      resizeObserver.observe(routeContent);
     }
 
     window.addEventListener("resize", onResize);
