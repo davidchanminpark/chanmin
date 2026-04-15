@@ -5,7 +5,14 @@ export interface Project {
   status: "active" | "stable" | "experimental" | "archived";
   category: "web" | "mobile" | "tools";
   githubUrl?: string;
+  liveUrl?: string;
   year: number;
+  images?: {
+    icon?: string;
+    screenshots?: string[];
+    /** How the screenshots are rendered on the card. Defaults to "mockup" (tilted phone frames). */
+    layout?: "mockup" | "strip" | "web-strip";
+  };
 }
 
 const projects: Project[] = [
@@ -18,16 +25,15 @@ const projects: Project[] = [
     category: "mobile",
     githubUrl: "https://github.com/davidchanminpark/time-my-life",
     year: 2024,
-  },
-  {
-    title: "psychiatrist",
-    description:
-      "An online version of the group game 'psychiatrist,' with a new 'crazy patient' rule variant.",
-    tags: ["React", "Node.js", "Socket.io"],
-    status: "stable",
-    category: "web",
-    githubUrl: "https://github.com/davidchanminpark/psychiatrist",
-    year: 2023,
+    images: {
+      icon: "/projects/time-my-life/icon.png",
+      screenshots: [
+        "/projects/time-my-life/screenshot-home.png",
+        "/projects/time-my-life/screenshot-timer.png",
+        "/projects/time-my-life/screenshot-detail.png",
+        "/projects/time-my-life/screenshot-year-dark.png",
+      ],
+    },
   },
   {
     title: "1q-a-day",
@@ -38,9 +44,36 @@ const projects: Project[] = [
     category: "mobile",
     githubUrl: "https://github.com/davidchanminpark/1q-a-day",
     year: 2024,
+    images: {
+      layout: "strip",
+      screenshots: [
+        "/projects/1q-a-day/screenshot-today.png",
+        "/projects/1q-a-day/screenshot-past.png",
+        "/projects/1q-a-day/screenshot-calendar.png",
+      ],
+    },
   },
   {
-    title: "chanmin.dev",
+    title: "psychiatrist",
+    description:
+      "An online version of the group game 'psychiatrist,' with a new 'crazy patient' rule variant.",
+    tags: ["React", "Node.js", "Socket.io"],
+    status: "stable",
+    category: "web",
+    githubUrl: "https://github.com/davidchanminpark/psychiatrist",
+    liveUrl: "https://psychiatrist-2o7v.onrender.com",
+    year: 2023,
+    images: {
+      layout: "web-strip",
+      screenshots: [
+        "/projects/psychiatrist/screenshot-home-desktop.png",
+        "/projects/psychiatrist/screenshot-game.png",
+        "/projects/psychiatrist/screenshot-leaderboard.png",
+      ],
+    },
+  },
+  {
+    title: "chanmin.studio",
     description:
       "Personal portfolio site — music, vlogs, and work in one place. Built with Next.js and Tailwind CSS.",
     tags: ["Next.js", "TypeScript", "Tailwind"],

@@ -116,8 +116,8 @@ export default async function Home() {
 
         {/* Identity tag */}
         <div className="mt-10 flex items-center gap-4">
-          <div className="w-11 h-11 rounded-full overflow-hidden flex-shrink-0" style={{ background: "var(--surface-highest)" }}>
-            <Image src="/avatar.svg" width={44} height={44} alt="Chanmin" className="w-full h-full object-cover" />
+          <div className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0" style={{ background: "var(--surface-highest)" }}>
+            <Image src="/avatar.jpg" width={56} height={56} alt="Chanmin" className="w-full h-full object-cover" />
           </div>
           <div>
             <p className="text-sm font-semibold lowercase" style={{ color: "var(--on-surface)" }}>chanmin park</p>
